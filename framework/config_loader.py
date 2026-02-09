@@ -74,8 +74,8 @@ class JudgingCriteria(BaseModel):
 
 class VoiceoverSettings(BaseModel):
     """ElevenLabs voiceover configuration"""
-    voice_id: str = "pNInz6obpgDQGcFmaJgB"  # Adam - professional narrator
-    tone: str = "Educational, confident, enthusiastic"
+    voice_id: str = "EaBs7G1VibMrNAuz2Na7"  # Monika - professional female narrator
+    tone: str = "Confident, professional, and enthusiastic"
     pacing_wpm: int = 145
     stability: float = 0.5  # V3 requires: 0.0 (Creative), 0.5 (Natural), 1.0 (Robust)
     clarity: float = 0.7580
@@ -261,7 +261,7 @@ def load_config(specs_path: str = "../INPUT/configuration/Product_Specs.md") -> 
     pacing_match = re.search(r'\*\*Pacing:\*\*\s+(\d+)-(\d+)\s+words', voiceover_section)
     
     voiceover_settings = VoiceoverSettings(
-        voice_id=voice_id_match.group(1) if voice_id_match else "pNInz6obpgDQGcFmaJgB",  # Adam
+        voice_id=voice_id_match.group(1) if voice_id_match else "EaBs7G1VibMrNAuz2Na7",  # Monika
         pacing_wpm=int(pacing_match.group(1)) if pacing_match else 145
     )
     

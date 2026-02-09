@@ -346,8 +346,8 @@ def update_product_specs(data: ProductData, analysis: Dict[str, Any], output_pat
 
 ## 🎙️ Voiceover Specifications
 
-**ElevenLabs Voice ID:** `pNInz6obpgDQGcFmaJgB` (Adam - professional narrator)
-**Tone:** Educational, confident, enthusiastic
+**ElevenLabs Voice ID:** `EaBs7G1VibMrNAuz2Na7` (Monika - professional female narrator)
+**Tone:** Confident, professional, and enthusiastic
 **Pacing:** 140-150 words per minute
 **Settings:**
   - Stability: 0.5
