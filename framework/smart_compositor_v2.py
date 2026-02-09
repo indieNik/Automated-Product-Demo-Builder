@@ -20,6 +20,7 @@ from typing import List, Dict
 # Add parent to path for config_loader
 sys.path.insert(0, str(Path(__file__).parent))
 from config_loader import load_config
+from caption_generator import generate_captions, create_styled_ass_file
 
 
 class SmartCompositor:
@@ -132,9 +133,10 @@ class SmartCompositor:
         self,
         video_path: Path,
         audio_path: Path,
-        output_filename: str
+        output_filename: str,
+        burn_captions: bool = False
     ) -> Path:
-        """Overlay voiceover onto video, extending video if audio is longer"""
+        """Overlay voiceover onto video, optionally burning captions"""
         output_path = self.temp_dir / output_filename
         
         # Get duration of audio
@@ -143,20 +145,40 @@ class SmartCompositor:
         
         print(f"🎵 Overlaying audio: {audio_path.name} ({audio_duration:.1f}s) on {video_path.name} ({video_duration:.1f}s)")
         
-        # Logic: If audio is longer, loop last frame of video? Or slow down?
-        # Simpler: Just extend video duration to match audio if needed (using tpad) works for static, 
-        # but for dynamic, let's just ensure video is at least as long as audio.
+        # Prepare filters
+        # 1. Pad video if needed [v_padded]
+        filters = f"[0:v]tpad=stop_mode=clone:stop_duration={max(0, audio_duration - video_duration + 1)}[v_padded]"
+        last_stream = "[v_padded]"
         
-        # We will use the -stream_loop -1 for image videos to match audio
-        # But for recordings, we might need to slow/speed or pad. 
-        # For this version: We assume recordings are roughly correct length or we pad with last frame.
-        
+        # 2. Generate and burn captions if requested
+        if burn_captions:
+            try:
+                # Generate SRT
+                srt_path = generate_captions(str(audio_path), None, str(self.temp_dir / f"{audio_path.stem}.srt"))
+                # Generate ASS (Styled)
+                ass_path = create_styled_ass_file(srt_path, None, str(self.temp_dir / f"{audio_path.stem}.ass"))
+                
+                # Add subtitle filter
+                # escape path for ffmpeg filter
+                ass_path_escaped = str(ass_path).replace(":", "\\:").replace("'", "\\'")
+                filters += f";{last_stream}subtitles='{ass_path_escaped}'[v_out]"
+                last_stream = "[v_out]"
+                print(f"   📝 Burnt captions from: {ass_path}")
+            except Exception as e:
+                print(f"   ⚠️  Caption generation failed: {e}")
+                filters += f";{last_stream}null[v_out]" # Fallback acts as pass-through
+                last_stream = "[v_out]"
+        else:
+             # Just map input to output name
+             filters += f";{last_stream}null[v_out]"
+             last_stream = "[v_out]"
+
         cmd = [
             "ffmpeg", "-y",
             "-i", str(video_path),
             "-i", str(audio_path),
-            "-filter_complex", f"[0:v]tpad=stop_mode=clone:stop_duration={max(0, audio_duration - video_duration + 1)}[v]",
-            "-map", "[v]",
+            "-filter_complex", filters,
+            "-map", last_stream,
             "-map", "1:a",
             "-c:v", "libx264",
             "-c:a", "aac",
@@ -219,6 +241,8 @@ def main():
     parser.add_argument("--scenes-dir", default="../OUTPUT/scenes")
     parser.add_argument("--voiceover-dir", default="../OUTPUT/voiceover")
     parser.add_argument("--output", default="../OUTPUT/final_video/IgniteAI_Final_Demo.mp4")
+    parser.add_argument("--storyline", help="Path to Storyline.md (optional context)")
+    parser.add_argument("--captions", type=str, default="false", help="Enable caption generation (true/false)")
     
     args = parser.parse_args()
     
@@ -227,6 +251,8 @@ def main():
     scenes_dir = base_dir / args.scenes_dir
     vo_dir = base_dir / args.voiceover_dir
     output_path = base_dir / args.output
+    
+    burn_captions = args.captions.lower() == "true"
     
     compositor = SmartCompositor(output_path.parent)
     
@@ -253,7 +279,7 @@ def main():
     if check_assets(hook_img, hook_vo):
         duration = compositor._get_duration(hook_vo) + 1.0 
         video_clip = compositor.create_video_from_image(hook_img, duration, "scene_1_base.mp4")
-        final_clip = compositor.overlay_audio(video_clip, hook_vo, "scene_1_final.mp4")
+        final_clip = compositor.overlay_audio(video_clip, hook_vo, "scene_1_final.mp4", burn_captions)
         segments.append(final_clip)
     else:
         print("⚠️  Skipping Scene 1")
@@ -268,7 +294,7 @@ def main():
 
     if scene_2_rec and check_assets(scene_2_rec, scene_2_vo):
         base_clip = compositor.convert_webp_to_mp4(scene_2_rec, "scene_2_base.mp4")
-        final_clip = compositor.overlay_audio(base_clip, scene_2_vo, "scene_2_final.mp4")
+        final_clip = compositor.overlay_audio(base_clip, scene_2_vo, "scene_2_final.mp4", burn_captions)
         segments.append(final_clip)
     else:
         print("⚠️  Skipping Scene 2 (Assets missing)")
@@ -297,7 +323,7 @@ def main():
         else:
             base_clip = compositor.convert_webp_to_mp4(scene_3_rec, "scene_3_base.mp4")
             
-        final_clip = compositor.overlay_audio(base_clip, scene_3_vo, "scene_3_final.mp4")
+        final_clip = compositor.overlay_audio(base_clip, scene_3_vo, "scene_3_final.mp4", burn_captions)
         segments.append(final_clip)
     else:
         print("⚠️  Skipping Scene 3 (Assets missing)")
@@ -325,7 +351,7 @@ def main():
         else:
              base_clip = compositor.convert_webp_to_mp4(scene_4_rec, "scene_4_base.mp4")
              
-        final_clip = compositor.overlay_audio(base_clip, scene_4_vo, "scene_4_final.mp4")
+        final_clip = compositor.overlay_audio(base_clip, scene_4_vo, "scene_4_final.mp4", burn_captions)
         segments.append(final_clip)
     else:
         print("⚠️  Skipping Scene 4 (Assets missing)")
@@ -338,7 +364,7 @@ def main():
     if check_assets(tech_img, tech_vo):
         duration = compositor._get_duration(tech_vo) + 2.0 
         video_clip = compositor.create_video_from_image(tech_img, duration, "scene_5_base.mp4")
-        final_clip = compositor.overlay_audio(video_clip, tech_vo, "scene_5_final.mp4")
+        final_clip = compositor.overlay_audio(video_clip, tech_vo, "scene_5_final.mp4", burn_captions)
         segments.append(final_clip)
     else:
         print("⚠️  Skipping Scene 5")
