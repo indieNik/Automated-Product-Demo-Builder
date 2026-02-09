@@ -86,7 +86,7 @@ def generate_voiceover(
         audio_generator = client.text_to_speech.convert(
             voice_id=config.voiceover.voice_id,
             text=text,
-            model_id="eleven_multilingual_v2", # Robust default
+            model_id="eleven_v3", # Robust default
             voice_settings=VoiceSettings(
                 stability=config.voiceover.stability,
                 similarity_boost=config.voiceover.clarity,
