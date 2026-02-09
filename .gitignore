@@ -1,0 +1,12 @@
+Output_History/*
+*.mp4
+*.webp
+*.png
+*.mp3
+*.wav
+*.pyc
+__pycache__
+.env
+.venv
+*.srt
+*.ass
