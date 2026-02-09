@@ -3,14 +3,14 @@
 ## 🌍 Project Overview
 This project is a modular, config-driven framework for generating professional product demo videos. It automates script generation, voiceover synthesis, captioning, and video composition.
 
-**Current Product Configuration:** IgniteAI (Production-Grade Agentic UGC Video Factory)
+**Current Product Configuration:** [None - Ready for Configuration]
 
 ## 🛠 Tech Stack
 - **Language:** Python 3
 - **Core Libraries:** 
   - `google-generativeai` (Gemini API)
   - `elevenlabs` (Voiceover)
-  - `openai-whisper` (Captions)
+  - `Gemini Speech-to-Text` (Captions)
   - `ffmpeg-python` (Video Composition)
 - **Infrastructure:** Local execution with API integrations.
 
@@ -21,17 +21,17 @@ This project is a modular, config-driven framework for generating professional p
   - `assets/`: Static assets (logos, background music).
 - **/OUTPUT/**: Generated artifacts.
   - `scripts/`: Generated voiceover scripts.
+  - `scenes/`: AI generated scenes.
   - `voiceover/`: Generated audio.
   - `captions/`: Generated subtitles.
-  - `scenes/`: AI generated scenes.
   - `final_video/`: Final output videos.
 - **/framework/**: Core python logic.
 
 
 ## 🚀 Workflows
-1.  **Configure**: Edit `INPUT/configuration/Product_Specs.md`.
-2.  **Run Pipeline**: `python framework/orchestrator.py --config=INPUT/configuration/Product_Specs.md`
-3.  **Manual Recording**: Record screen when prompted (if not fully automated).
+1.  **Configure:** Edit `INPUT/configuration/Product_Specs.md`.
+2.  **Run Pipeline:** `python framework/orchestrator.py --config=INPUT/configuration/Product_Specs.md`
+3.  **Manual Recording:** Record screen when prompted (if not fully automated).
 
 ## 🧠 Context
 - The framework is designed to be reusable for different products by swapping the `Product_Specs.md`.

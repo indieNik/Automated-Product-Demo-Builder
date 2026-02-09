@@ -44,7 +44,7 @@ def generate_captions(
     output_path: str = "../OUTPUT/captions/captions.srt"
 ) -> str:
     """
-    Generate word-level captions from voiceover audio using Whisper API
+    Generate word-level captions from voiceover audio using Gemini Speech-to-Text API
     
     Args:
         audio_path: Path to voiceover MP3 file

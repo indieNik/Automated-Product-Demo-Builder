@@ -7,7 +7,7 @@ A modular, config-driven framework for generating professional product demo vide
 This framework automates the creation of 3-minute product demo videos by reading a single configuration file (`Product_Specs.md`) and orchestrating:
 - **Script generation** using Gemini API
 - **Voiceover synthesis** using ElevenLabs
-- **Caption generation** using Whisper
+- **Caption generation** using Gemini Speech-to-Text
 - **Video composition** using FFmpeg
 
 **Key Feature:** Reusable across multiple products - just swap out `Product_Specs.md`!
@@ -34,7 +34,7 @@ PRODUCT_DEMO/
 │   ├── config_loader.py          # Parses Product_Specs.md
 │   ├── script_generator.py       # Gemini script generation
 │   ├── voiceover_generator.py    # ElevenLabs TTS
-│   ├── caption_generator.py      # Whisper captions
+│   ├── caption_generator.py      # Gemini Speech-to-Text captions
 │   ├── video_compositor.py       # FFmpeg composition
 │   ├── recording_orchestrator.py # Browser automation helper
 │   ├── orchestrator.py           # Main pipeline
@@ -83,7 +83,7 @@ python orchestrator.py --config=../INPUT/configuration/Product_Specs.md
 The pipeline will:
 1. ✅ Generate voiceover script (Gemini API)
 2. ✅ Create audio narration (ElevenLabs)
-3. ✅ Generate captions (Whisper API)
+3. ✅ Generate captions (Gemini Speech-to-Text API)
 4. ⏸️ Pause for screen recording (manual step)
 5. ✅ Composite final video (FFmpeg)
 
@@ -255,7 +255,7 @@ ffmpeg -version
 **Problem:** Captions don't align with audio
 
 **Solution:**
-- Use word-level timestamps (automatic with Whisper API)
+- Use word-level timestamps (automatic with Gemini Speech-to-Text API)
 - Check audio file hasn't been trimmed after caption generation
 - Regenerate captions from original voiceover file
 
@@ -266,7 +266,7 @@ ffmpeg -version
 **Solution:**
 - Gemini: Wait 60 seconds, retry
 - ElevenLabs: Check character quota at elevenlabs.io
-- OpenAI Whisper: Upgrade to paid tier for higher limits
+- Gemini Speech-to-Text: Upgrade to paid tier for higher limits
 
 ---
 
@@ -320,7 +320,7 @@ graph LR
     
     C -.Gemini API.-> C
     D -.ElevenLabs API.-> D
-    E -.Whisper API.-> E
+    E -.Gemini Speech-to-Text API.-> E
     G -.FFmpeg.-> G
 ```
 
@@ -328,7 +328,7 @@ graph LR
 1. `config_loader` parses Product_Specs.md (from INPUT) → Pydantic models
 2. `script_generator` uses config → Gemini API → narration script
 3. `voiceover_generator` converts script → ElevenLabs API → MP3
-4. `caption_generator` extracts audio → Whisper API → SRT/ASS
+4. `caption_generator` extracts audio → Gemini Speech-to-Text API → SRT/ASS
 5. `video_compositor` merges recording + VO + captions + BGM → Final MP4
 
 ---

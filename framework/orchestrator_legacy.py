@@ -166,7 +166,7 @@ def run_demo_pipeline(
     
     # Stage 4: Generate Captions
     if not skip_captions:
-        print("\n📝 Stage 4: Generating captions with Whisper API...")
+        print("\n📝 Stage 4: Generating captions with Gemini Speech-to-Text API...")
         state.srt_path = generate_captions(state.voiceover_path, state.config)
         state.ass_path = create_styled_ass_file(state.srt_path, state.config)
     else:
