@@ -147,21 +147,21 @@ def main():
 
     # Phase 0: Product Analysis
     # Generates Product_Specs.md from URL
-    # if not run_phase(
-    #     0,
-    #     "Product Analysis & Spec Generation",
-    #     [
-    #         "python3",
-    #         "product_analyzer.py",
-    #         "--url=https://igniteai.in", 
-    #         "--output=../INPUT/configuration/Product_Specs.md",
-    #          "--credentials=test@test.com/test@test.com"
-    #     ],
-    #     framework_dir
-    # ):
-    #     print("❌ Product Analysis failed. Pipeline stopped.")
-    #     sys.exit(1)
-    # phases_completed.append("Product Analysis")
+    if not run_phase(
+        0,
+        "Product Analysis & Spec Generation",
+        [
+            "python3",
+            "product_analyzer.py",
+            "--url=https://igniteai.in", 
+            "--output=../INPUT/configuration/Product_Specs.md",
+             "--credentials=test@test.com/test@test.com"
+        ],
+        framework_dir
+    ):
+        print("❌ Product Analysis failed. Pipeline stopped.")
+        sys.exit(1)
+    phases_completed.append("Product Analysis")
 
     # Phase 1: Browser Recording & Video Generation (Record First)
     # Uses Product_Specs.md actions to generate raw footage
@@ -274,7 +274,7 @@ def main():
             "python3",
             "smart_compositor_v2.py",
             "--storyline=../OUTPUT/scripts/Storyline.md", 
-            "--output=../OUTPUT/final_video/IgniteAI_Final_Demo.mp4",
+            "--output=../OUTPUT/final_video/Final_Demo_Video.mp4",
             "--captions=true" # Flag to enable captioning inside compositor
         ],
         framework_dir
@@ -300,7 +300,7 @@ def main():
     print(f"  - Recordings: {base_dir}/INPUT/raw_recordings/")
     print(f"  - AI Scenes: {base_dir}/OUTPUT/scenes/")
     print(f"  - Voiceovers: {base_dir}/OUTPUT/voiceover/")
-    print(f"  - FINAL VIDEO: {base_dir}/OUTPUT/final_video/IgniteAI_Final_Demo.mp4")
+    print(f"  - FINAL VIDEO: {base_dir}/OUTPUT/final_video/Final_Demo_Video.mp4")
     print()
 
 

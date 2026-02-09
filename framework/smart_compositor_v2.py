@@ -240,7 +240,7 @@ def main():
     parser.add_argument("--recordings-dir", default="../INPUT/raw_recordings")
     parser.add_argument("--scenes-dir", default="../OUTPUT/scenes")
     parser.add_argument("--voiceover-dir", default="../OUTPUT/voiceover")
-    parser.add_argument("--output", default="../OUTPUT/final_video/IgniteAI_Final_Demo.mp4")
+    parser.add_argument("--output", default="../OUTPUT/final_video/Final_Demo_Video.mp4")
     parser.add_argument("--storyline", help="Path to Storyline.md (optional context)")
     parser.add_argument("--captions", type=str, default="false", help="Enable caption generation (true/false)")
     
@@ -333,7 +333,6 @@ def main():
     # Look for 'result', 'final', or reuse 'belmix' end?
     # Based on file list, maybe 'belmix_raw_ad_gen_edited.mov' is better for Scene 3/4
     # If no specific Scene 4, we might skip or reuse.
-    # checking file list: 'igniteai_assets_library_view' might be results?
     candidates = list(recordings_dir.glob("*assets*.png")) + \
                  list(recordings_dir.glob("*result*.webp"))
     

@@ -16,7 +16,7 @@ RECORDINGS_DIR = BASE_DIR / "01_raw_recordings"
 VOICEOVER = BASE_DIR / "03_voiceover" / "voiceover_raw.mp3"
 CAPTIONS = BASE_DIR / "04_captions" / "captions_styled.ass"
 OUTPUT_DIR = BASE_DIR / "06_final"
-OUTPUT_FILE = OUTPUT_DIR / "IgniteAI_Demo_Final.mp4"
+OUTPUT_FILE = OUTPUT_DIR / "Final_Demo_Video.mp4"
 
 # Primary Video
 BELMIX_AD = RECORDINGS_DIR / "belmix_raw_ad_gen_edited.mov"
