@@ -142,8 +142,18 @@ def main():
     framework_dir = Path(__file__).parent.resolve()
     base_dir = framework_dir.parent.resolve() # Root of the project
 
-    # Resolve config path
-    if ".." in args.config:
+    # Resolve    # If config not provided, try to find it in product folders
+    if not args.config and args.product_name:
+        potential_path = base_dir / args.product_name / "INPUT" / "configuration" / "Product_Specs.md"
+        if potential_path.exists():
+            args.config = str(potential_path)
+            
+    # Default to generic if still not found (legacy)
+    if not args.config:
+        args.config = "../INPUT/configuration/Product_Specs.md"
+        
+    abs_config_path = Path(args.config).resolve()
+    if not abs_config_path.is_absolute():
         abs_config_path = (framework_dir / args.config).resolve()
     else:
         abs_config_path = Path(args.config).resolve()
@@ -153,10 +163,22 @@ def main():
     if not product_name:
         product_name = "GenericProduct"
 
-    # Create Dynamic Directories
+    # Create Product Directories
+    product_dir = base_dir / product_name
+    input_base_dir = product_dir / "INPUT"
+    input_config_dir = input_base_dir / "configuration"
+    input_recordings_dir = input_base_dir / "raw_recordings"
+    input_assets_dir = input_base_dir / "assets"
+    
+    # Ensure they exist
+    input_config_dir.mkdir(parents=True, exist_ok=True)
+    input_recordings_dir.mkdir(parents=True, exist_ok=True)
+    input_assets_dir.mkdir(parents=True, exist_ok=True)
+
+    # Dynamic Timestamped Output & Input History
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    output_dir = base_dir / product_name / f"OUTPUT-{timestamp}"
-    input_history_dir = base_dir / product_name / f"INPUT-{timestamp}"
+    output_dir = product_dir / f"OUTPUT-{timestamp}"
+    input_history_dir = product_dir / f"INPUT-{timestamp}"
     
     output_dir.mkdir(parents=True, exist_ok=True)
     input_history_dir.mkdir(parents=True, exist_ok=True)
@@ -169,10 +191,13 @@ def main():
     
     # Archive Input Config
     if abs_config_path.exists():
-        shutil.copy(abs_config_path, input_history_dir / "Product_Specs.md")
+         shutil.copy(abs_config_path, input_history_dir / "Product_Specs.md")
+         # Also ensure it's in the main INPUT/configuration if different
+         if abs_config_path.parent != input_config_dir:
+             shutil.copy(abs_config_path, input_config_dir / "Product_Specs.md")
 
     # Setup Logging
-    log_file = output_dir / f"run_{product_name}.log"
+    log_file = product_dir / f"run_{product_name}.log"
     logger = setup_logging(log_file)
 
     logger.info("="*80)
@@ -218,17 +243,9 @@ def main():
 
     # Phase 1: Browser Recording & Video Generation (Record First)
     if not args.skip_recording:
-        # Note: browser_recorder.py likely needs to know where to save recordings
-        # We should update it or pass the output dir. 
-        # For now, let's assume it supports --output-dir
-        # But wait, original code used `../INPUT/raw_recordings`. 
-        # User wants "Same goes for Input: <product_name>/INPUT-<date_time>".
-        # So recordings should go to input_history_dir / "raw_recordings" ???
-        # OR usually recordings are INPUTs for the *next* steps.
-        # Let's put them in input_history_dir for now so they are archived with this run.
-        
-        recording_dir = input_history_dir / "raw_recordings"
-        recording_dir.mkdir(exist_ok=True)
+        # Save recordings to the timestamped INPUT archive for this run
+        recording_output_dir = input_history_dir / "raw_recordings"
+        recording_output_dir.mkdir(exist_ok=True)
 
         if not run_phase(
             1,
@@ -236,18 +253,27 @@ def main():
             [
                 "python3",
                 "browser_recorder.py",
-                f"--storyline={abs_config_path}", 
+                f"--storyline={output_dir}/scripts/Storyline.md", 
                 f"--config={abs_config_path}",
-                f"--output-dir={recording_dir}"
+                f"--output-dir={recording_output_dir}" 
             ],
             framework_dir,
             logger
         ):
             logger.error("Recording failed. Pipeline stopped.")
+            logger.error("Recording failed. Pipeline stopped.")
             sys.exit(1)
         phases_completed.append("Autonomous Video Recording")
     else:
         logger.info("Skipping Phase 1: Browser Recording (User Request)")
+        # If skipping, we expect assets to be in the staging INPUT/raw_recordings or manually placed
+        # We should check if we need to copy them to the input_history_dir for this run
+        # For now, let's assume the compositor will look in the input_history_dir, so we might need to populate it?
+        # Actually, let's keep it simple: If skipped, we assume the user might have provided a specific recording input
+        # OR we just explicitly copy the staging recordings to the history dir if they exist
+        staging_recs = input_recordings_dir
+        if staging_recs.exists():
+             shutil.copytree(staging_recs, input_history_dir / "raw_recordings", dirs_exist_ok=True)
 
     # Phase 2: Storyline Generation (Context-Aware)
     if not run_phase(

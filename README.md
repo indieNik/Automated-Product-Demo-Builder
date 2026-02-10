@@ -23,6 +23,11 @@ cd framework
 python3 orchestrator.py --config=../INPUT/configuration/Product_Specs.md
 ```
 
+Logs will be available in `<Product_Name>/run_<Product_Name>.log`.
+Input will be in `<Product_Name>/INPUT-<timestamp>/`.
+Output will be in `<Product_Name>/OUTPUT-<timestamp>/`.
+
+
 ### 4. Manual Screen Recording
 When prompted, record your screen:
 - Use QuickTime: File → New Screen Recording

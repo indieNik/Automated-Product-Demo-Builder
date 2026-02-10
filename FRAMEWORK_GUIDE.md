@@ -18,18 +18,19 @@ This framework automates the creation of 3-minute product demo videos by reading
 
 ```
 PRODUCT_DEMO/
-PRODUCT_DEMO/
-├── INPUT/
-│   ├── configuration/
-│   │   └── Product_Specs.md      # Configuration file (edit this!)
-│   ├── raw_recordings/           # Screen recordings
-│   └── assets/                   # BGM, logos, etc.
-├── OUTPUT/
-│   ├── scripts/                  # Generated voiceover scripts
-│   ├── voiceover/                # Generated audio
-│   ├── captions/                 # SRT and ASS caption files
-│   ├── scenes/                   # AI generated scenes
-│   └── final_video/              # Final rendered videos
+├── <PRODUCT_NAME>/                   # Product-specific Runs
+│   ├── run_<product>.log             # Execution logs
+│   ├── INPUT-<timestamp>/
+│   │   ├── configuration/
+│   │   │   └── Product_Specs.md      # Configuration file (edit this!)
+│   │   ├── raw_recordings/
+│   │   └── assets/                   # BGM, logos, etc.
+│   └── OUTPUT-<timestamp>/   # Generated artifacts
+│       ├── scripts/          # Generated voiceover scripts
+│       ├── voiceover/        # Generated audio
+│       ├── captions/         # SRT and ASS caption files
+│       ├── scenes/           # AI generated scenes
+│       └── final_video/      # Final rendered videos
 ├── framework/                    # Core framework (reusable)
 │   ├── config_loader.py          # Parses Product_Specs.md
 │   ├── script_generator.py       # Gemini script generation
@@ -415,6 +416,7 @@ python orchestrator.py --config=../INPUT/configuration/Product_Specs.md --skip-c
 ## 📞 Support
 
 **Issues:**
+- **Check Logs:** See `<Product>/OUTPUT-<timestamp>/run_<product>.log` for detailed error messages.
 - Config not parsing: Check YAML syntax in embedded blocks
 - API errors: Verify keys in `.env` file
 - FFmpeg crashes: Check input file formats (prefer MP4/WebM)

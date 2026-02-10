@@ -15,22 +15,24 @@ This project is a modular, config-driven framework for generating professional p
 - **Infrastructure:** Local execution with API integrations.
 
 ## 📂 Key Directories & Files
-- **/INPUT/**: Input components.
-  - `configuration/Product_Specs.md`: Main configuration file.
-  - `raw_recordings/`: Input screen recordings.
-  - `assets/`: Static assets (logos, background music).
-- **/OUTPUT/**: Generated artifacts.
-  - `scripts/`: Generated voiceover scripts.
-  - `scenes/`: AI generated scenes.
-  - `voiceover/`: Generated audio.
-  - `captions/`: Generated subtitles.
+- **/<PRODUCT_NAME>/**: Product-specific Runs
+  - `run_<product>.log`: Execution logs.
+  - `INPUT-<timestamp>/`: Input components to be read from `<Product_Name>/INPUT-<timestamp>/`
+    - `configuration/Product_Specs.md`: Main configuration file.
+    - `raw_recordings/`: Input screen recordings.
+    - `assets/`: Static assets (logos, background music).
+  - `OUTPUT-<timestamp>/`: Generated artifacts are now stored in `<Product_Name>/OUTPUT-<timestamp>/`.
+    - `scripts/`: Generated voiceover scripts.
+    - `scenes/`: AI generated scenes.
+    - `voiceover/`: Generated audio.
+    - `captions/`: Generated subtitles.
   - `final_video/`: Final output videos.
 - **/framework/**: Core python logic.
 
 
 ## 🚀 Workflows
-1.  **Configure:** Edit `INPUT/configuration/Product_Specs.md`.
-2.  **Run Pipeline:** `python framework/orchestrator.py --config=INPUT/configuration/Product_Specs.md`
+1.  **Configure:** Edit `<PRODUCT_NAME>/INPUT-<timestamp>/configuration/Product_Specs.md`.
+2.  **Run Pipeline:** `python framework/orchestrator.py --config=<PRODUCT_NAME>/INPUT-<timestamp>/configuration/Product_Specs.md`
 3.  **Manual Recording:** Record screen when prompted (if not fully automated).
 
 ## 🧠 Context
@@ -39,6 +41,6 @@ This project is a modular, config-driven framework for generating professional p
 - Aesthetics and "wow" factor are critical for the generated demos.
 
 ## 📝 Rules for AI
-- Always check `INPUT/configuration/Product_Specs.md` for current product context.
+- Always check `<PRODUCT_NAME>/INPUT/configuration/Product_Specs.md` for current product context.
 - When modifying framework code, ensure backward compatibility for other potential product configs.
-- Prefer `pip install -r requirements.txt` for dependency management.
+- Prefer `pip3 install -r requirements.txt` for dependency management.
