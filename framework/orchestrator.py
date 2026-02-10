@@ -325,6 +325,9 @@ def main():
             "smart_compositor_v2.py",
             f"--storyline={output_dir}/scripts/Storyline.md", 
             f"--output={output_dir}/final_video/Final_Demo_Video.mp4",
+            f"--recordings-dir={input_history_dir}/raw_recordings",
+            f"--scenes-dir={output_dir}/scenes",
+            f"--voiceover-dir={output_dir}/voiceover",
             "--captions=true"
         ],
         framework_dir,

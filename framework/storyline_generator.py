@@ -451,9 +451,15 @@ def main():
     args = parser.parse_args()
     
     # Load config
-    config_path = Path(__file__).parent / args.config
+    # Fix: Correctly handle absolute paths
+    if Path(args.config).is_absolute():
+        config_path = Path(args.config)
+    else:
+        config_path = Path(__file__).parent / args.config
+        
     if not config_path.exists():
         print(f"❌ Config file not found: {config_path}")
+
         sys.exit(1)
     
     print(f"📄 Loading config from: {config_path}")

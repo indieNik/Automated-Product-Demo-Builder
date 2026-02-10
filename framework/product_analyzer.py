@@ -415,6 +415,8 @@ def update_product_specs(data: ProductData, analysis: Dict[str, Any], output_pat
 - `/framework/orchestrator.py`
 """
 
+    # Ensure directory exists
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding='utf-8')
     print(f"✅ Updated {output_path}")
 

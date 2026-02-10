@@ -247,10 +247,15 @@ def main():
     args = parser.parse_args()
     
     base_dir = Path(__file__).parent
-    recordings_dir = base_dir / args.recordings_dir
-    scenes_dir = base_dir / args.scenes_dir
-    vo_dir = base_dir / args.voiceover_dir
-    output_path = base_dir / args.output
+    
+    def resolve_path(p: str, base: Path) -> Path:
+        path = Path(p)
+        return path if path.is_absolute() else base / p
+
+    recordings_dir = resolve_path(args.recordings_dir, base_dir)
+    scenes_dir = resolve_path(args.scenes_dir, base_dir)
+    vo_dir = resolve_path(args.voiceover_dir, base_dir)
+    output_path = resolve_path(args.output, base_dir)
     
     burn_captions = args.captions.lower() == "true"
     
@@ -286,14 +291,26 @@ def main():
 
     # Scene 2: Landing Page (Recording + VO)
     print("\n🎬 Processing Scene 2: Landing Page")
-    # Look for specific landing page recordings first
-    candidates = list(recordings_dir.glob("*landing*.webp")) + \
-                 list(recordings_dir.glob("*dashboard*.webp"))
+    # Match by scene number (MP4 or WebP)
+    candidates = list(recordings_dir.glob("scene_2_*.mp4")) + \
+                 list(recordings_dir.glob("scene_2_*.webp"))
     scene_2_rec = sorted(candidates, key=lambda p: p.stat().st_mtime)[-1] if candidates else None
     scene_2_vo = vo_dir / "scene_2_vo.mp3"
 
     if scene_2_rec and check_assets(scene_2_rec, scene_2_vo):
-        base_clip = compositor.convert_webp_to_mp4(scene_2_rec, "scene_2_base.mp4")
+        # Handle MP4 vs WebP
+        if scene_2_rec.suffix.lower() == ".mp4":
+             base_clip = compositor.temp_dir / "scene_2_base.mp4"
+             cmd = [
+                "ffmpeg", "-y", "-i", str(scene_2_rec),
+                "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                "-vf", "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1",
+                str(base_clip)
+             ]
+             subprocess.run(cmd, check=True)
+        else:
+             base_clip = compositor.convert_webp_to_mp4(scene_2_rec, "scene_2_base.mp4")
+             
         final_clip = compositor.overlay_audio(base_clip, scene_2_vo, "scene_2_final.mp4", burn_captions)
         segments.append(final_clip)
     else:
@@ -301,17 +318,13 @@ def main():
 
     # Scene 3: Demo (Recording + VO)
     print("\n🎬 Processing Scene 3: Live Demo")
-    # Prioritize 'belmix' or 'creation' recordings
-    candidates = list(recordings_dir.glob("*belmix*.mov")) + \
-                 list(recordings_dir.glob("*campaign*.webp"))
-    # Prefer mov if available, else webp
+    candidates = list(recordings_dir.glob("scene_3_*.mp4")) + \
+                 list(recordings_dir.glob("scene_3_*.webp"))
     scene_3_rec = sorted(candidates, key=lambda p: p.stat().st_mtime)[-1] if candidates else None
     scene_3_vo = vo_dir / "scene_3_vo.mp3"
     
     if scene_3_rec and check_assets(scene_3_rec, scene_3_vo):
-        # Convert MOV or WebP
-        if scene_3_rec.suffix.lower() == ".mov":
-            # Just copy/scale MOV
+        if scene_3_rec.suffix.lower() == ".mp4" or scene_3_rec.suffix.lower() == ".mov":
             base_clip = compositor.temp_dir / "scene_3_base.mp4"
             cmd = [
                 "ffmpeg", "-y", "-i", str(scene_3_rec),
@@ -330,15 +343,9 @@ def main():
 
     # Scene 4: Results (Recording + VO)
     print("\n🎬 Processing Scene 4: Results")
-    # Look for 'result', 'final', or reuse 'belmix' end?
-    # Based on file list, maybe 'belmix_raw_ad_gen_edited.mov' is better for Scene 3/4
-    # If no specific Scene 4, we might skip or reuse.
-    candidates = list(recordings_dir.glob("*assets*.png")) + \
-                 list(recordings_dir.glob("*result*.webp"))
-    
-    # If no recording, maybe use a static image from screenshots?
-    if not candidates:
-        candidates = list(recordings_dir.glob("screenshots/*history*.png"))
+    candidates = list(recordings_dir.glob("scene_4_*.mp4")) + \
+                 list(recordings_dir.glob("scene_4_*.webp")) + \
+                 list(recordings_dir.glob("scene_4_*.png"))
         
     scene_4_rec = sorted(candidates, key=lambda p: p.stat().st_mtime)[-1] if candidates else None
     scene_4_vo = vo_dir / "scene_4_vo.mp3"
