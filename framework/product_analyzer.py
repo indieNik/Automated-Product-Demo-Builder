@@ -158,6 +158,20 @@ class BrowserAnalyzer:
             
         return product_data
 
+    def assess_navigability(self, product_data: ProductData) -> str:
+        """Determines if the site is fully navigable or just a landing page"""
+        if not product_data.interactive_elements:
+            return "limited"
+        
+        # Count interactive elements
+        element_count = len(product_data.interactive_elements.split('\n'))
+        
+        # Heuristic: If < 5 elements or mostly just 'Login'/'Sign Up', it's likely limited
+        if element_count < 5:
+            return "limited"
+            
+        return "full"
+
 class GeminiAnalyzer:
     def __init__(self):
         api_key = os.getenv("GEMINI_API_KEY")
@@ -278,6 +292,7 @@ def update_product_specs(data: ProductData, analysis: Dict[str, Any], output_pat
         },
         "demo": {
             "duration_seconds": 180,
+            "navigability_status": analysis.get("navigability_status", "full"),
             "scenes": []
         },
         "judging_criteria": {
@@ -370,7 +385,14 @@ def main():
     
     # 2. Gemini Analysis
     gemini = GeminiAnalyzer()
+    
+    # Assess navigability before sending to Gemini (or send it too)
+    navigability = browser.assess_navigability(data)
+    print(f"🧭 Navigability Status: {navigability}")
+    
     analysis_result = gemini.analyze_product(data)
+    if analysis_result:
+        analysis_result["navigability_status"] = navigability
     data.analysis_result = analysis_result
     
     # 3. Update Config

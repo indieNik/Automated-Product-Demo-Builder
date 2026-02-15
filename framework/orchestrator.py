@@ -149,14 +149,12 @@ def main():
     framework_dir = Path(__file__).parent.resolve()
     base_dir = framework_dir.parent.resolve() # Root of the project
 
-    # Resolve    # If config not provided, try to find it in product folders
+    # If config not provided, try to find it in product folders
     if not args.config and args.product_name:
-        potential_path = base_dir / args.product_name / "INPUT" / "configuration" / "Product_Specs.json"
-        # If we are analyzing, we might WANT this path even if it doesn't exist yet
-        if args.analyze_url:
-             args.config = str(potential_path)
-        elif potential_path.exists():
-            args.config = str(potential_path)
+        # With new structure, we don't have a stable INPUT folder to look for defaults.
+        # But if we are analyzing, we will be creating a new one.
+        # We'll handle the path creation after we establish the timestamped folders.
+        pass
             
     # Default to generic if still not found (legacy)
     if not args.config:
@@ -175,23 +173,23 @@ def main():
 
     # Create Product Directories
     product_dir = base_dir / product_name
-    input_base_dir = product_dir / "INPUT"
-    input_config_dir = input_base_dir / "configuration"
-    input_recordings_dir = input_base_dir / "raw_recordings"
-    input_assets_dir = input_base_dir / "assets"
-    
-    # Ensure they exist
-    input_config_dir.mkdir(parents=True, exist_ok=True)
-    input_recordings_dir.mkdir(parents=True, exist_ok=True)
-    input_assets_dir.mkdir(parents=True, exist_ok=True)
-
     # Dynamic Timestamped Output & Input History
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     output_dir = product_dir / f"OUTPUT-{timestamp}"
     input_history_dir = product_dir / f"INPUT-{timestamp}"
     
+    # Create Timestamped Directories
     output_dir.mkdir(parents=True, exist_ok=True)
     input_history_dir.mkdir(parents=True, exist_ok=True)
+
+    # Setup Input Subdirectories
+    input_config_dir = input_history_dir / "configuration"
+    input_recordings_dir = input_history_dir / "raw_recordings"
+    input_assets_dir = input_history_dir / "assets"
+
+    input_config_dir.mkdir(parents=True, exist_ok=True)
+    input_recordings_dir.mkdir(parents=True, exist_ok=True)
+    input_assets_dir.mkdir(parents=True, exist_ok=True)
     
     # Setup subdirectories in OUTPUT
     (output_dir / "scripts").mkdir(exist_ok=True)
@@ -201,13 +199,10 @@ def main():
     
     # Archive Input Config
     if abs_config_path.exists():
-         shutil.copy(abs_config_path, input_history_dir / "Product_Specs.md")
-         # Also ensure it's in the main INPUT/configuration if different
-         if abs_config_path.parent != input_config_dir:
-             shutil.copy(abs_config_path, input_config_dir / "Product_Specs.md")
+         shutil.copy(abs_config_path, input_config_dir / "Product_Specs.json")
 
     # Setup Logging
-    log_file = product_dir / f"run_{product_name}.log"
+    log_file = output_dir / f"run_{product_name}.log"
     logger = setup_logging(log_file)
 
     logger.info("="*80)
@@ -229,7 +224,7 @@ def main():
             "python3",
             "product_analyzer.py",
             f"--url={args.analyze_url}",
-            f"--output={abs_config_path}"
+            f"--output={input_config_dir}/Product_Specs.json" # Output directly to timestamped folder
         ]
         if args.product_name:
             analyze_cmd.append(f"--name={args.product_name}")
@@ -248,8 +243,9 @@ def main():
         phases_completed.append("Product Analysis")
     
         # Re-copy the generated config to history
+        # Analysis updates the config in place (abs_config_path), so we copy it to our timestamped input
         if abs_config_path.exists():
-             shutil.copy(abs_config_path, input_history_dir / "Product_Specs.md")
+             shutil.copy(abs_config_path, input_config_dir / "Product_Specs.json")
 
     # Phase 1: Storyline Generation (Context-Aware)
     if not run_phase(
@@ -258,7 +254,8 @@ def main():
         [
             "python3",
             "storyline_generator.py",
-            f"--config={abs_config_path}",
+            "storyline_generator.py",
+            f"--config={input_config_dir}/Product_Specs.json" if args.analyze_url else f"--config={abs_config_path}", # Use new config if analyzed
             f"--output={output_dir}/scripts/Storyline.md"
         ],
         framework_dir,
@@ -271,8 +268,7 @@ def main():
     # Phase 2: Browser Recording & Video Generation
     if not args.skip_recording:
         # Save recordings to the timestamped INPUT archive for this run
-        recording_output_dir = input_history_dir / "raw_recordings"
-        recording_output_dir.mkdir(exist_ok=True)
+        recording_output_dir = input_recordings_dir
 
         if not run_phase(
             2,
@@ -281,7 +277,7 @@ def main():
                 "python3",
                 "browser_recorder.py",
                 f"--storyline={output_dir}/scripts/Storyline.md", 
-                f"--config={abs_config_path}",
+                f"--config={input_config_dir}/Product_Specs.json" if args.analyze_url else f"--config={abs_config_path}",
                 f"--output-dir={recording_output_dir}" 
             ],
             framework_dir,
@@ -293,14 +289,9 @@ def main():
         phases_completed.append("Autonomous Video Recording")
     else:
         logger.info("Skipping Phase 2: Browser Recording (User Request)")
-        # If skipping, we expect assets to be in the staging INPUT/raw_recordings or manually placed
-        # We should check if we need to copy them to the input_history_dir for this run
-        # For now, let's assume the compositor will look in the input_history_dir, so we might need to populate it?
-        # Actually, let's keep it simple: If skipped, we assume the user might have provided a specific recording input
-        # OR we just explicitly copy the staging recordings to the history dir if they exist
-        staging_recs = input_recordings_dir
-        if staging_recs.exists():
-             shutil.copytree(staging_recs, input_history_dir / "raw_recordings", dirs_exist_ok=True)
+        logger.info(f"⚠️  Expecting pre-existing recordings in: {input_recordings_dir}")
+        # Logic to copy from a previous run or generic location could go here if needed
+        pass
         
     # Phase 3: AI Scene Generation (Hooks/B-Roll)
     if not run_phase(

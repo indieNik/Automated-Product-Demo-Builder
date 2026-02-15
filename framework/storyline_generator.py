@@ -259,12 +259,49 @@ Return as JSON with this structure:
         **UI Flow Available**:
         {yaml.dump(ui_flow, default_flow_style=False)}
 
-        Create 5 scenes following this timing:
-        1. Hook + Problem (30s) - Grab attention, establish pain
-        2. Solution Introduction (20s) - Show landing page, introduce product
-        3. Feature Demo (60s) - Live product interaction showing key workflow
-        4. Results Showcase (20s) - Show output/benefit
-        5. Impact + CTA (20s) - Metrics and call-to-action
+        # Adaptive Logic based on navigability
+        navigability = getattr(self.config.demo, 'navigability_status', 'full')
+        
+        if navigability == 'limited':
+            structure_prompt = """
+            **Constraint**: The product has LIMITED public navigability (likely just a landing page).
+            Create a concise **1 to 3 scene** demo.
+            - Scene 1: Hook + Problem (Focus on the pain point)
+            - Scene 2: Solution Value Prop (Show the landing page and explain how it solves the problem)
+            - Scene 3 (Optional): Impact/CTA (Summary and call to action)
+            
+            **CRITICAL**: Do NOT attempt to simulate complex dashboard interactions or features that are likely behind a login. Focus on the available public content.
+            """
+        else:
+            structure_prompt = """
+            Create 5 scenes following this timing:
+            1. Hook + Problem (30s) - Grab attention, establish pain
+            2. Solution Introduction (20s) - Show landing page, introduce product
+            3. Feature Demo (60s) - Live product interaction showing key workflow
+            4. Results Showcase (20s) - Show output/benefit
+            5. Impact + CTA (20s) - Metrics and call-to-action
+            """
+
+        prompt = f"""Create a product demo script with this structure:
+        
+        **Context**:
+        {recording_context}
+
+        **PSB Analysis**:
+        - Problem: {psb_data['problem']}
+        - Solution: {psb_data['solution']}
+        - Benefit: {psb_data['benefit']}
+        - Hook: {psb_data['hook_suggestion']}
+
+        **Product**: {self.product_name}
+        **Target Duration**: {target_duration}s
+        **Tone**: {self.config.voiceover.tone}
+        **Navigability**: {navigability}
+
+        **UI Flow Available**:
+        {yaml.dump(ui_flow, default_flow_style=False)}
+
+        {structure_prompt}
 
         For EACH scene, provide:
         - Scene title
@@ -414,7 +451,8 @@ Return as JSON with this structure:
             product_name=self.product_name,
             total_duration=self.config.demo.duration_seconds,
             hook_type=psb_data.get('hook_suggestion', 'Problem-focused'),
-            structure=f"Problem ({scenes[0].duration_seconds}s) → Solution ({scenes[1].duration_seconds}s) → Demo ({scenes[2].duration_seconds}s) → Results ({scenes[3].duration_seconds}s) → Impact ({scenes[4].duration_seconds}s)",
+            hook_type=psb_data.get('hook_suggestion', 'Problem-focused'),
+            structure=f"Problem ({scenes[0].duration_seconds}s) → Solution ({scenes[1].duration_seconds}s) ..." if len(scenes) > 1 else "Single Scene",
             scenes=scenes
         )
         
@@ -454,16 +492,27 @@ def main():
     
     args = parser.parse_args()
     
+    # Strip quotes and whitespace if present
+    config_arg = args.config.strip('"').strip("'").strip()
+    
     # Load config
-    # Fix: Correctly handle absolute paths
-    if Path(args.config).is_absolute():
-        config_path = Path(args.config)
+    # Fix: Correctly handle absolute paths and CWD-relative paths
+    if Path(config_arg).is_absolute():
+        config_path = Path(config_arg)
+    elif (Path.cwd() / config_arg).exists():
+        config_path = Path.cwd() / config_arg
     else:
-        config_path = Path(__file__).parent / args.config
+        config_path = Path(__file__).parent / config_arg
         
     if not config_path.exists():
-        print(f"❌ Config file not found: {config_path}")
-
+        # Last ditch effort: Try relative to project root (assuming framework/..)
+        potential_path = Path(__file__).parent.parent / args.config
+        if potential_path.exists():
+            config_path = potential_path
+            
+    if not config_path.exists():
+        print(f"❌ Config file not found: {args.config}")
+        print(f"   Checked absolute, CWD ({Path.cwd()}), and relative to script ({Path(__file__).parent})")
         sys.exit(1)
     
     print(f"📄 Loading config from: {config_path}")

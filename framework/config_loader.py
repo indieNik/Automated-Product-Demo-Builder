@@ -55,6 +55,7 @@ class DemoScene(BaseModel):
 class DemoStructure(BaseModel):
     """Demo configuration"""
     duration_seconds: int
+    navigability_status: str = "full"
     scenes: List[DemoScene]
 
 
