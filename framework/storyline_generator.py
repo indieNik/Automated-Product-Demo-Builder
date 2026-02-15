@@ -5,7 +5,7 @@ Storyline Intelligence Engine
 Autonomous product analysis and PSB (Problem-Solution-Benefit) storyline creation.
 
 Workflow:
-1. Read Product_Specs.md for brand, product URL, value props
+1. Read Product_Specs.json for brand, product URL, value props
 2. Launch browser agent to explore product
 3. Identify key UI elements and interaction points
 4. Analyze PSB structure (Problem → Solution → Benefit)
@@ -157,31 +157,35 @@ Return as JSON:
 
 Product: {self.product_name}
 URL: {self.product_url}
-Type: {self.config.product.category if hasattr(self.config.product, 'category') else 'SaaS Application'}
+Category: {self.product_category}
+Problem: {self.product_problem}
+Solution: {self.product_solution}
 
-Suggest a realistic user journey with these steps:
-1. Landing page (what to show)
-2. Sign in / Access (credentials or flow)
-3. Main feature demonstration (specific buttons/forms to interact with)
-4. Result showcase (what the output looks like)
+Suggest a realistic user journey based on the product's specific problem/solution. Do not assume a generic SaaS "Dashboard" or "Campaign" creation flow unless the product specifically mentions it.
+
+Define the flow for these phases:
+1. Landing page (what viewer sees first about the problem/solution)
+2. Access/Entry (how user starts using the product - e.g., 'Get Started', 'Login', or 'Search')
+3. Core Interaction (The main "Aha!" moment where the problem is solved)
+4. Result/Benefit (The final output or dashboard view)
 
 Return as JSON with this structure:
 {{
     "landing": {{
-        "actions": ["Navigate to {self.product_url}", "Scroll to hero section"],
-        "key_elements": ["Hero CTA", "Value props", "Social proof"]
+        "actions": ["Navigate to {{self.product_url}}", "Observe 'Hero Headline'"],
+        "key_elements": ["Key Value Prop", "Call to Action"]
     }},
     "authentication": {{
-        "actions": ["Click Sign In", "Enter email: demo@example.com", "Enter password: demo"],
-        "key_elements": ["Login form", "Remember me checkbox"]
+        "actions": ["Click 'Get Started' or 'Login'", "Enter credentials if applicable"],
+        "key_elements": ["Entry point"]
     }},
     "feature_demo": {{
-        "actions": ["Click 'New Campaign'", "Fill product name: 'Belmix'", "Click 'Generate'"],
-        "key_elements": ["Campaign form", "Generate button", "Progress indicator"]
+        "actions": ["Action 1 (e.g., Search for X)", "Action 2 (e.g., Click result)", "Action 3"],
+        "key_elements": ["Core feature interface"]
     }},
     "results": {{
-        "actions": ["Wait for generation", "View output"],
-        "key_elements": ["Generated video", "Download button", "Share options"]
+        "actions": ["View final report/dashboard"],
+        "key_elements": ["Success metrics", "Export options"]
     }}
 }}
 """
@@ -191,7 +195,7 @@ Return as JSON with this structure:
                 model='gemini-2.5-flash',
                 contents=prompt,
                 config=types.GenerateContentConfig(
-                    temperature=0.5,
+                    temperature=0.4, # Lower temperature for more grounded output
                     response_mime_type="application/json",
                 )
             )
@@ -439,8 +443,8 @@ def main():
     parser = argparse.ArgumentParser(description="Generate product demo storyline")
     parser.add_argument(
         "--config",
-        default="../INPUT/configuration/Product_Specs.md",
-        help="Path to Product_Specs.md"
+        default="../INPUT/configuration/Product_Specs.json",
+        help="Path to Product_Specs.json"
     )
     parser.add_argument(
         "--output",
@@ -473,7 +477,7 @@ def main():
     print("🎯 Next steps:")
     print("   1. Review Storyline.md")
     print("   2. Run browser recording: python3 browser_recorder.py")
-    print("   3. Generate voiceover: python3 voiceover_generator.py --storyline")
+    print("   3. Generate voiceover: python3 skills/voiceover_generator/agent.py --storyline")
     print()
 
 

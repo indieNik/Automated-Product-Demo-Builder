@@ -59,10 +59,10 @@ class StorylineParser:
         scenes = []
         
         # Find all scene blocks
-        # Support both Storyline.md (## Scene 1) and Product_Specs.md (### Scene 1)
+        # Support both Storyline.md (## Scene 1) and Product_Specs.json (### Scene 1)
         # Specs format: ### Scene 1: Title (0:00-0:30)
         
-        # Regex for Product_Specs.md style
+        # Regex for Product_Specs.json style
         specs_pattern = r'### Scene (\d+): (.+?) \((\d+):(\d+)-(\d+):(\d+)\)'
         specs_matches = list(re.finditer(specs_pattern, self.content))
         
@@ -109,7 +109,7 @@ class StorylineParser:
         """Helper to parse actions from a scene block"""
             
         # Parse browser actions
-        # Try '### Browser Actions' (Storyline.md) OR '**Actions:**' (Product_Specs.md)
+        # Try '### Browser Actions' (Storyline.md) OR '**Actions:**' (Product_Specs.json)
         actions_matches = []
         
         # Check for ### Browser Actions section
@@ -378,6 +378,10 @@ When all actions are complete OR {duration} seconds have elapsed, stop recording
         print(f"      Running: {action}")
         action = action.strip()
         
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        
         try:
             if action.lower().startswith("wait"):
                 # Parse "Wait X seconds"
@@ -402,69 +406,121 @@ When all actions are complete OR {duration} seconds have elapsed, stop recording
                     target_text = target.split('"')[1]
                 else:
                     target_text = target
-                
-                # Try XPATH for text matching
-                try:
-                    el = driver.find_element(By.XPATH, f"//*[contains(text(), '{target_text}')]")
-                    driver.execute_script("arguments[0].scrollIntoView(true);", el)
-                    time.sleep(0.5)
-                    el.click()
-                    return
-                except:
-                    pass
                     
-                # Try partial match or other selectors
-                try:
-                    el = driver.find_element(By.PARTIAL_LINK_TEXT, target_text)
-                    el.click()
-                    return
-                except:
-                    print(f"      ⚠️ Could not click: {target_text}")
+                print(f"      🔍 Searching for element with text: '{target_text}'")
+                
+                # Strategy 1: Exact text match (fastest)
+                # Strategy 2: Case-insensitive text match (XPath 1.0 hack)
+                # Strategy 3: Partial text match
+                # Strategy 4: Placeholder/Aria-label/ID
+                
+                xpath_strategies = [
+                    f"//*[text()='{target_text}']",
+                    f"//*[contains(text(), '{target_text}')]",
+                    f"//button[contains(., '{target_text}')]",
+                    f"//a[contains(., '{target_text}')]",
+                    f"//*[@role='button' and contains(., '{target_text}')]",
+                    f"//*[@aria-label='{target_text}']",
+                    f"//*[@placeholder='{target_text}']",
+                    f"//*[@id='{target_text}']",
+                    # Case insensitive approach
+                    f"//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '{target_text.lower()}')]"
+                ]
+                
+                element = None
+                for xpath in xpath_strategies:
+                    try:
+                        elements = driver.find_elements(By.XPATH, xpath)
+                        # Filter for displayed elements
+                        visible_elements = [e for e in elements if e.is_displayed()]
+                        if visible_elements:
+                            element = visible_elements[0]
+                            print(f"      ✅ Found by xpath: {xpath}")
+                            break
+                    except:
+                        continue
+                        
+                if element:
+                    try:
+                        # Scroll into view
+                        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+                        time.sleep(0.5)
+                        # Highlight for visual debugging/recording
+                        driver.execute_script("arguments[0].style.border='3px solid red';", element)
+                        time.sleep(0.2)
+                        
+                        # Try standard click
+                        try:
+                            element.click()
+                        except:
+                            # Fallback to JS click
+                            print("      ⚠️ Standard click failed, trying JS click")
+                            driver.execute_script("arguments[0].click();", element)
+                        return
+                    except Exception as e:
+                        print(f"      ❌ Click interaction failed: {e}")
+                else:
+                    print(f"      ⚠️ Could not find element to click: {target_text}")
                     
             elif action.lower().startswith("type"):
                 # Parse "Type 'text' in [Element]"
-                # Simple extraction: find string between quotes, then finding the rest
                 import re
                 matches = re.findall(r"['\"](.*?)['\"]", action)
                 if len(matches) >= 1:
                     text_to_type = matches[0]
-                    # Target element might be the second match or implied?
-                    # If len matches >= 2, second is target.
+                    target_name = matches[1] if len(matches) >= 2 else None
                     
                     target_el = None
-                    if len(matches) >= 2:
-                        target_name = matches[1]
-                        # Try to find input by placeholder or label?
-                        try:
-                            target_el = driver.find_element(By.XPATH, f"//input[@placeholder='{target_name}']")
-                        except:
-                            try:
-                                target_el = driver.find_element(By.XPATH, f"//input[@name='{target_name}']")
-                            except:
-                                pass
+                    
+                    if target_name:
+                         # Try finding input by specific target name/placeholder
+                         print(f"      🔍 Searching for input: '{target_name}'")
+                         xpaths = [
+                             f"//input[@placeholder='{target_name}']",
+                             f"//input[@name='{target_name}']",
+                             f"//input[@id='{target_name}']",
+                             f"//input[@aria-label='{target_name}']",
+                             f"//textarea[@placeholder='{target_name}']",
+                             f"//label[contains(text(), '{target_name}')]/following::input[1]"
+                         ]
+                         for xpath in xpaths:
+                             try:
+                                 visible_elements = [e for e in driver.find_elements(By.XPATH, xpath) if e.is_displayed()]
+                                 if visible_elements:
+                                     target_el = visible_elements[0]
+                                     break
+                             except:
+                                 continue
                     
                     if not target_el:
-                         # Fallback: Find first visible input? dangerous.
-                         # Try finding focused element?
+                         # Fallback: Find first visible input or active element
                          try:
                              target_el = driver.switch_to.active_element
+                             if target_el.tag_name not in ['input', 'textarea']:
+                                 target_el = None
                          except:
                              pass
                              
                     if target_el:
-                        target_el.clear()
-                        target_el.send_keys(text_to_type)
+                        try:
+                            # Highlight
+                            driver.execute_script("arguments[0].style.border='3px solid blue';", target_el)
+                            target_el.clear()
+                            for char in text_to_type:
+                                target_el.send_keys(char)
+                                time.sleep(0.05) # Type naturally
+                        except Exception as e:
+                            print(f"      ❌ Type interaction failed: {e}")
                     else:
                         print(f"      ⚠️ Could not find input to type: {text_to_type}")
                         
             elif action.lower().startswith("navigate"):
                 # "Navigate to [URL]"
                 if "http" in action:
-                    url = action.split("yyy")[-1] # simplistic
-                    # Extract URL
                     import re
                     urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', action)
                     if urls:
+                        print(f"      🌍 Navigating to: {urls[0]}")
                         driver.get(urls[0])
                         
         except Exception as e:
@@ -502,13 +558,13 @@ def main():
     parser = argparse.ArgumentParser(description="Autonomous browser recording from storyline")
     parser.add_argument(
         "--storyline",
-        default="../INPUT/configuration/Product_Specs.md",
-        help="Path to Product_Specs.md (or Storyline.md)"
+        default="../INPUT/configuration/Product_Specs.json",
+        help="Path to Product_Specs.json (or Storyline.md)"
     )
     parser.add_argument(
         "--config",
-        default="../INPUT/configuration/Product_Specs.md",
-        help="Path to Product_Specs.md"
+        default="../INPUT/configuration/Product_Specs.json",
+        help="Path to Product_Specs.json"
     )
     parser.add_argument(
         "--output-dir",
@@ -567,7 +623,7 @@ def main():
     print("🎯 Next Steps:")
     print("   1. Review recording_manifest.json")
     print("   2. Integrate browser_subagent tool for actual recording")
-    print("   3. Run voiceover generation: python3 voiceover_generator.py --storyline")
+    print("   3. Run voiceover generation: python3 skills/voiceover_generator/agent.py --storyline")
     print()
 
 

@@ -21,7 +21,7 @@ def clean_workspace():
     # Files/Dirs to clear (content only or recreate)
     # We remove the folders and recreate them to ensure they are empty
     paths_to_clean = [
-        input_dir / "configuration" / "Product_Specs.md",
+        input_dir / "configuration" / "Product_Specs.json",
         input_dir / "raw_recordings",
         output_dir / "scripts",
         output_dir / "scenes",

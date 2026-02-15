@@ -1,0 +1,114 @@
+{
+  "product": {
+    "name": "[Product Name]",
+    "tagline": "[Tagline]",
+    "url": "[Product URL]",
+    "category": "[SaaS Category]",
+    "problem": "[Describe the problem your product solves...]",
+    "solution": "[Describe how your product solves it...]"
+  },
+  "demo": {
+    "duration_seconds": 180,
+    "scenes": [
+      {
+        "name": "Scene 1: The Problem",
+        "duration": "0:00-0:30",
+        "objective": "[What this scene achieves]",
+        "visuals": "[What is shown]",
+        "key_points": [
+          "[Point 1]",
+          "[Point 2]"
+        ],
+        "actions": [
+          "[Action 1]"
+        ]
+      },
+      {
+        "name": "Scene 2: The Solution",
+        "duration": "0:30-0:50",
+        "objective": "Introduce the product.",
+        "visuals": "Landing page.",
+        "key_points": [
+          "[Point 1]"
+        ],
+        "actions": [
+          "Navigate to [URL]"
+        ]
+      },
+      {
+        "name": "Scene 3: The Magic",
+        "duration": "0:50-1:50",
+        "objective": "Core feature walkthrough.",
+        "visuals": "Dashboard/App interface.",
+        "key_points": [
+          "[Feature 1]",
+          "[Feature 2]"
+        ],
+        "actions": [
+          "Click [Button]",
+          "Type [Text]"
+        ]
+      },
+      {
+        "name": "Scene 4: The Result",
+        "duration": "1:50-2:30",
+        "objective": "Show the outcome/value.",
+        "visuals": "Results page.",
+        "key_points": [
+          "[Benefit 1]"
+        ],
+        "actions": [
+          "View results"
+        ]
+      },
+      {
+        "name": "Scene 5: Conclusion",
+        "duration": "2:30-3:00",
+        "objective": "Call to action.",
+        "visuals": "Pricing or Sign-up page.",
+        "key_points": [
+          "[CTA]"
+        ],
+        "actions": [
+          "Click \"Sign Up\""
+        ]
+      }
+    ]
+  },
+  "judging_criteria": {
+    "technical_execution": {
+      "weight": 0.4,
+      "strategies": [
+        "Highlight complexity handled by the app"
+      ]
+    },
+    "potential_impact": {
+      "weight": 0.2,
+      "strategies": []
+    },
+    "innovation": {
+      "weight": 0.3,
+      "strategies": [
+        "Showcase unique value prop"
+      ]
+    },
+    "presentation": {
+      "weight": 0.1,
+      "strategies": []
+    }
+  },
+  "voiceover": {
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "tone": "Confident, professional",
+    "pacing_wpm": 140,
+    "stability": 0.5,
+    "clarity": 0.75,
+    "style": 0.0
+  },
+  "assets": {
+    "test_credentials": {
+      "email": "user",
+      "password": "pass"
+    }
+  }
+}

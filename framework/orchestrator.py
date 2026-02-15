@@ -98,7 +98,15 @@ def run_phase(phase_num: int, phase_name: str, command: list, cwd: Path, logger:
 def get_product_name(config_path: Path):
     """Extract product name from config file or filename"""
     try:
-        with open(config_path, 'r') as f:
+        # JSON Support
+        if config_path.suffix.lower() == '.json':
+            import json
+            with open(config_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                return data.get('product', {}).get('name', '').strip().replace(" ", "")
+        
+        # Markdown Support (Legacy)
+        with open(config_path, 'r', encoding='utf-8') as f:
             for line in f:
                 if "Product Name:" in line:
                     return line.split(":", 1)[1].strip().replace(" ", "")
@@ -115,8 +123,7 @@ def main():
     )
     parser.add_argument(
         "--config",
-        default="../INPUT/configuration/Product_Specs.md",
-        help="Path to Product_Specs.md"
+        help="Path to Product_Specs.json"
     )
     parser.add_argument(
         "--skip-recording",
@@ -144,13 +151,16 @@ def main():
 
     # Resolve    # If config not provided, try to find it in product folders
     if not args.config and args.product_name:
-        potential_path = base_dir / args.product_name / "INPUT" / "configuration" / "Product_Specs.md"
-        if potential_path.exists():
+        potential_path = base_dir / args.product_name / "INPUT" / "configuration" / "Product_Specs.json"
+        # If we are analyzing, we might WANT this path even if it doesn't exist yet
+        if args.analyze_url:
+             args.config = str(potential_path)
+        elif potential_path.exists():
             args.config = str(potential_path)
             
     # Default to generic if still not found (legacy)
     if not args.config:
-        args.config = "../INPUT/configuration/Product_Specs.md"
+        args.config = "GenericProduct/INPUT/configuration/Product_Specs.json"
         
     abs_config_path = Path(args.config).resolve()
     if not abs_config_path.is_absolute():
@@ -241,14 +251,31 @@ def main():
         if abs_config_path.exists():
              shutil.copy(abs_config_path, input_history_dir / "Product_Specs.md")
 
-    # Phase 1: Browser Recording & Video Generation (Record First)
+    # Phase 1: Storyline Generation (Context-Aware)
+    if not run_phase(
+        1,
+        "Storyline Intelligence Engine",
+        [
+            "python3",
+            "storyline_generator.py",
+            f"--config={abs_config_path}",
+            f"--output={output_dir}/scripts/Storyline.md"
+        ],
+        framework_dir,
+        logger
+    ):
+        logger.error("Pipeline failed at Phase 1 (Storyline)")
+        sys.exit(1)
+    phases_completed.append("Storyline Generation")
+
+    # Phase 2: Browser Recording & Video Generation
     if not args.skip_recording:
         # Save recordings to the timestamped INPUT archive for this run
         recording_output_dir = input_history_dir / "raw_recordings"
         recording_output_dir.mkdir(exist_ok=True)
 
         if not run_phase(
-            1,
+            2,
             "Autonomous Video Recording",
             [
                 "python3",
@@ -265,7 +292,7 @@ def main():
             sys.exit(1)
         phases_completed.append("Autonomous Video Recording")
     else:
-        logger.info("Skipping Phase 1: Browser Recording (User Request)")
+        logger.info("Skipping Phase 2: Browser Recording (User Request)")
         # If skipping, we expect assets to be in the staging INPUT/raw_recordings or manually placed
         # We should check if we need to copy them to the input_history_dir for this run
         # For now, let's assume the compositor will look in the input_history_dir, so we might need to populate it?
@@ -274,23 +301,6 @@ def main():
         staging_recs = input_recordings_dir
         if staging_recs.exists():
              shutil.copytree(staging_recs, input_history_dir / "raw_recordings", dirs_exist_ok=True)
-
-    # Phase 2: Storyline Generation (Context-Aware)
-    if not run_phase(
-        2,
-        "Storyline Intelligence Engine",
-        [
-            "python3",
-            "storyline_generator.py",
-            f"--config={abs_config_path}",
-            f"--output={output_dir}/scripts/Storyline.md"
-        ],
-        framework_dir,
-        logger
-    ):
-        logger.error("Pipeline failed at Phase 2")
-        sys.exit(1)
-    phases_completed.append("Storyline Generation")
         
     # Phase 3: AI Scene Generation (Hooks/B-Roll)
     if not run_phase(
@@ -298,7 +308,7 @@ def main():
         "Generative Visuals Engine (Hook)",
         [
             "python3",
-            "scene_generator.py",
+            "skills/scene_generator/agent.py",
             "--type=hook",
             f"--output-dir={output_dir}/scenes"
         ],
@@ -314,7 +324,7 @@ def main():
         "Generative Visuals Engine (Tech Stack)",
         [
             "python3",
-            "scene_generator.py",
+            "skills/scene_generator/agent.py",
             "--type=tech",
              f"--output-dir={output_dir}/scenes"
         ],
@@ -331,7 +341,7 @@ def main():
         "Neural Voice Synthesis",
         [
             "python3",
-            "voiceover_generator.py",
+            "skills/voiceover_generator/agent.py",
             f"--storyline={output_dir}/scripts/Storyline.md",
             f"--output_dir={output_dir}/voiceover"
         ],

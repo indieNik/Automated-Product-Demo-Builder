@@ -13,6 +13,11 @@ from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from dotenv import load_dotenv
 
+# Add framework directory to path for imports
+current_dir = Path(__file__).resolve().parent
+framework_dir = current_dir.parent.parent
+sys.path.insert(0, str(framework_dir))
+
 from config_loader import load_config, DemoConfig
 
 # Load environment variables
@@ -107,7 +112,7 @@ def generate_voiceover(
 
 def main():
     parser = argparse.ArgumentParser(description="ElevenLabs Voiceover Generator")
-    parser.add_argument("--config", help="Path to Product_Specs.md (unused mostly, keeps compat)")
+    parser.add_argument("--config", help="Path to Product_Specs.json (unused mostly, keeps compat)")
     parser.add_argument("--storyline", required=True, help="Path to Storyline.md")
     parser.add_argument("--output_dir", required=True, help="Output directory")
     
@@ -151,7 +156,7 @@ def main():
                 pacing_wpm = 140
         
         # Try loading actual config if we can find it
-        config_path = Path("../INPUT/configuration/Product_Specs.md")
+        config_path = Path("../INPUT/configuration/Product_Specs.json")
         if config_path.exists():
             config = load_config(str(config_path))
         else:

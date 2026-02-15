@@ -18,7 +18,7 @@ This project is a modular, config-driven framework for generating professional p
 - **/<PRODUCT_NAME>/**: Product-specific Runs
   - `run_<product>.log`: Execution logs.
   - `INPUT-<timestamp>/`: Input components to be read from `<Product_Name>/INPUT-<timestamp>/`
-    - `configuration/Product_Specs.md`: Main configuration file.
+    - `configuration/Product_Specs.json`: Main configuration file (Duplicate from `templates/Product_Specs_Template.json`).
     - `raw_recordings/`: Input screen recordings.
     - `assets/`: Static assets (logos, background music).
   - `OUTPUT-<timestamp>/`: Generated artifacts are now stored in `<Product_Name>/OUTPUT-<timestamp>/`.
@@ -27,20 +27,21 @@ This project is a modular, config-driven framework for generating professional p
     - `voiceover/`: Generated audio.
     - `captions/`: Generated subtitles.
   - `final_video/`: Final output videos.
+- **/templates/**: Reusable configuration templates.
 - **/framework/**: Core python logic.
 
 
 ## 🚀 Workflows
-1.  **Configure:** Edit `<PRODUCT_NAME>/INPUT-<timestamp>/configuration/Product_Specs.md`.
-2.  **Run Pipeline:** `python framework/orchestrator.py --config=<PRODUCT_NAME>/INPUT-<timestamp>/configuration/Product_Specs.md`
+1.  **Configure:** Duplicate `templates/Product_Specs_Template.json` to `<Product_Name>/INPUT/configuration/Product_Specs.json` and edit.
+2.  **Run Pipeline:** `python framework/orchestrator.py --config=<PRODUCT_NAME>/INPUT-<timestamp>/configuration/Product_Specs.json`
 3.  **Manual Recording:** Record screen when prompted (if not fully automated).
 
 ## 🧠 Context
-- The framework is designed to be reusable for different products by swapping the `Product_Specs.md`.
+- The framework is designed to be reusable for different products by swapping the `Product_Specs.json`.
 - Codebase follows a modular architecture where each step (script, voice, captions, video) can be run independently or orchestrated together.
 - Aesthetics and "wow" factor are critical for the generated demos.
 
 ## 📝 Rules for AI
-- Always check `<PRODUCT_NAME>/INPUT/configuration/Product_Specs.md` for current product context.
+- Always check `<PRODUCT_NAME>/INPUT/configuration/Product_Specs.json` for current product context.
 - When modifying framework code, ensure backward compatibility for other potential product configs.
 - Prefer `pip3 install -r requirements.txt` for dependency management.

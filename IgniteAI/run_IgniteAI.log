@@ -1,0 +1,203 @@
+2026-02-15 15:30:55,052 - INFO - ================================================================================
+2026-02-15 15:30:55,052 - INFO - 🚀 AUTONOMOUS PRODUCT DEMO GENERATOR (PRO EDITION)
+2026-02-15 15:30:55,052 - INFO - ================================================================================
+2026-02-15 15:30:55,052 - INFO - Config: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/INPUT/configuration/Product_Specs.json
+2026-02-15 15:30:55,052 - INFO - Product: IgniteAI
+2026-02-15 15:30:55,052 - INFO - Output Directory: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55
+2026-02-15 15:30:55,052 - INFO - Input Archive: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/INPUT-2026-02-15_15-30-55
+2026-02-15 15:30:55,052 - INFO - Started: 2026-02-15_15-30-55
+2026-02-15 15:30:55,052 - INFO - ================================================================================
+2026-02-15 15:30:55,052 - INFO - 🎬 PHASE 1: STORYLINE INTELLIGENCE ENGINE
+2026-02-15 15:30:55,052 - INFO - ================================================================================
+2026-02-15 15:30:55,052 - INFO - Command: python3 storyline_generator.py --config=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/INPUT/configuration/Product_Specs.json --output=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scripts/Storyline.md
+2026-02-15 15:31:31,923 - DEBUG - 📄 Loading config from: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/INPUT/configuration/Product_Specs.json
+2026-02-15 15:31:31,924 - DEBUG - ================================================================================
+2026-02-15 15:31:31,924 - DEBUG - 🎬 STORYLINE INTELLIGENCE ENGINE
+2026-02-15 15:31:31,924 - DEBUG - ================================================================================
+2026-02-15 15:31:31,924 - DEBUG - Product: IgniteAI
+2026-02-15 15:31:31,924 - DEBUG - URL: https://igniteai.in
+2026-02-15 15:31:31,924 - DEBUG - Target Duration: 180s
+2026-02-15 15:31:31,924 - DEBUG - 
+2026-02-15 15:31:31,924 - DEBUG - 🔍 Analyzing product for PSB structure...
+2026-02-15 15:31:31,924 - DEBUG - ✅ PSB Analysis Complete
+2026-02-15 15:31:31,924 - DEBUG - Problem: Creating professional product demos is an incredibly time-consuming, expensive, ...
+2026-02-15 15:31:31,924 - DEBUG - Solution: IgniteAI provides an autonomous AI agent that completely automates product demo ...
+2026-02-15 15:31:31,924 - DEBUG - 
+2026-02-15 15:31:31,924 - DEBUG - 🌐 Exploring product UI: https://igniteai.in
+2026-02-15 15:31:31,924 - DEBUG - ✅ UI Flow Mapped
+2026-02-15 15:31:31,924 - DEBUG - Phases: landing, authentication, feature_demo, results
+2026-02-15 15:31:31,924 - DEBUG - 
+2026-02-15 15:31:31,924 - DEBUG - 📝 Generating scene-by-scene storyline...
+2026-02-15 15:31:31,924 - DEBUG - ✅ Generated 5 scenes
+2026-02-15 15:31:31,924 - DEBUG - 
+2026-02-15 15:31:31,924 - DEBUG - ✅ Storyline exported to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scripts/Storyline.md
+2026-02-15 15:31:31,924 - DEBUG - 
+2026-02-15 15:31:31,924 - DEBUG - ================================================================================
+2026-02-15 15:31:31,925 - DEBUG - ✅ STORYLINE GENERATION COMPLETE
+2026-02-15 15:31:31,925 - DEBUG - ================================================================================
+2026-02-15 15:31:31,925 - DEBUG - 📁 Output: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scripts/Storyline.md
+2026-02-15 15:31:31,925 - DEBUG - 📊 Scenes: 5
+2026-02-15 15:31:31,925 - DEBUG - ⏱️  Total Duration: 180s
+2026-02-15 15:31:31,925 - DEBUG - 
+2026-02-15 15:31:31,925 - DEBUG - 🎯 Next steps:
+2026-02-15 15:31:31,925 - DEBUG - 1. Review Storyline.md
+2026-02-15 15:31:31,925 - DEBUG - 2. Run browser recording: python3 browser_recorder.py
+2026-02-15 15:31:31,925 - DEBUG - 3. Generate voiceover: python3 skills/voiceover_generator/agent.py --storyline
+2026-02-15 15:31:31,925 - DEBUG - 
+2026-02-15 15:31:31,925 - INFO - ✅ Phase 1 complete: Storyline Intelligence Engine
+2026-02-15 15:31:31,925 - INFO - Skipping Phase 2: Browser Recording (User Request)
+2026-02-15 15:31:32,106 - INFO - ================================================================================
+2026-02-15 15:31:32,106 - INFO - 🎬 PHASE 3: GENERATIVE VISUALS ENGINE (HOOK)
+2026-02-15 15:31:32,106 - INFO - ================================================================================
+2026-02-15 15:31:32,106 - INFO - Command: python3 skills/scene_generator/agent.py --type=hook --output-dir=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes
+2026-02-15 15:31:45,121 - DEBUG - 🎨 Generating Hook Scene...
+2026-02-15 15:31:45,121 - DEBUG - Problem: Creating high-performing User-Generated Content (UGC) ads is incredibly expensiv...
+2026-02-15 15:31:45,121 - DEBUG - Hook: Are you spending thousands and weeks on UGC ads that barely move the needle?...
+2026-02-15 15:31:45,121 - DEBUG - ✅ Hook scene saved: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes/hook_scene.png
+2026-02-15 15:31:45,121 - DEBUG - 
+2026-02-15 15:31:45,121 - DEBUG - ✅ Hook Scene Generated!
+2026-02-15 15:31:45,121 - DEBUG - Image: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes/hook_scene.png
+2026-02-15 15:31:45,122 - DEBUG - Script: [concerned] Are you spending thousands and weeks on UGC ads that barely move the needle?
+2026-02-15 15:31:45,364 - INFO - ✅ Phase 3 complete: Generative Visuals Engine (Hook)
+2026-02-15 15:31:45,364 - INFO - ================================================================================
+2026-02-15 15:31:45,364 - INFO - 🎬 PHASE 3: GENERATIVE VISUALS ENGINE (TECH STACK)
+2026-02-15 15:31:45,364 - INFO - ================================================================================
+2026-02-15 15:31:45,364 - INFO - Command: python3 skills/scene_generator/agent.py --type=tech --output-dir=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes
+2026-02-15 15:31:57,062 - DEBUG - 🔍 Scanning project for technologies...
+2026-02-15 15:31:57,062 - DEBUG - ✅ Found 6 technologies
+2026-02-15 15:31:57,062 - DEBUG - 🎨 Generating Tech Wrap-up Scene...
+2026-02-15 15:31:57,062 - DEBUG - Technologies: 6
+2026-02-15 15:31:57,062 - DEBUG - ✅ Tech wrap-up scene saved: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes/tech_wrapup_scene.png
+2026-02-15 15:31:57,062 - DEBUG - 
+2026-02-15 15:31:57,062 - DEBUG - ✅ Tech Wrap-up Scene Generated!
+2026-02-15 15:31:57,062 - DEBUG - Image: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes/tech_wrapup_scene.png
+2026-02-15 15:31:57,062 - DEBUG - 
+2026-02-15 15:31:57,062 - DEBUG - 📝 Voiceover Script:
+2026-02-15 15:31:57,062 - DEBUG - [excited] This demo was powered entirely by Google's AI ecosystem!
+2026-02-15 15:31:57,062 - DEBUG - 
+2026-02-15 15:31:57,062 - DEBUG - We use Gemini 2.5 Flash for Image Generation and Gemini 2.0 Flash for Image Generation.
+2026-02-15 15:31:57,063 - DEBUG - 
+2026-02-15 15:31:57,063 - DEBUG - [happy] The natural voice you're hearing? Powered by ElevenLabs v3 with emotional expression capabilities.
+2026-02-15 15:31:57,063 - DEBUG - 
+2026-02-15 15:31:57,063 - DEBUG - [enthusiastic] All running seamlessly on Vertex AI!
+2026-02-15 15:31:57,063 - DEBUG - 
+2026-02-15 15:31:57,063 - DEBUG - [proud] A complete AI-powered stack for autonomous content creation!
+2026-02-15 15:31:57,253 - INFO - ✅ Phase 3 complete: Generative Visuals Engine (Tech Stack)
+2026-02-15 15:31:57,253 - INFO - ================================================================================
+2026-02-15 15:31:57,253 - INFO - 🎬 PHASE 4: NEURAL VOICE SYNTHESIS
+2026-02-15 15:31:57,253 - INFO - ================================================================================
+2026-02-15 15:31:57,253 - INFO - Command: python3 skills/voiceover_generator/agent.py --storyline=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scripts/Storyline.md --output_dir=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/voiceover
+2026-02-15 15:32:50,589 - DEBUG - ⚠️  No config provided, using defaults.
+2026-02-15 15:32:50,590 - DEBUG - found 5 scenes to synthesize.
+2026-02-15 15:32:50,591 - DEBUG - 🎙️  Generating scene_1_vo.mp3...
+2026-02-15 15:32:50,591 - DEBUG - Text: Tired of spending days or even weeks crafting a si...
+2026-02-15 15:32:50,591 - DEBUG - ✅ Saved (532.3 KB)
+2026-02-15 15:32:50,591 - DEBUG - 🎙️  Generating scene_2_vo.mp3...
+2026-02-15 15:32:50,591 - DEBUG - Text: Introducing IgniteAI, the revolutionary autonomous...
+2026-02-15 15:32:50,591 - DEBUG - ✅ Saved (438.4 KB)
+2026-02-15 15:32:50,591 - DEBUG - 🎙️  Generating scene_3_vo.mp3...
+2026-02-15 15:32:50,591 - DEBUG - Text: Let's see IgniteAI in action! First, a quick and s...
+2026-02-15 15:32:50,591 - DEBUG - ✅ Saved (916.0 KB)
+2026-02-15 15:32:50,591 - DEBUG - 🎙️  Generating scene_4_vo.mp3...
+2026-02-15 15:32:50,591 - DEBUG - Text: And just like that, IgniteAI has delivered! Here's...
+2026-02-15 15:32:50,591 - DEBUG - ✅ Saved (408.6 KB)
+2026-02-15 15:32:50,591 - DEBUG - 🎙️  Generating scene_5_vo.mp3...
+2026-02-15 15:32:50,591 - DEBUG - Text: IgniteAI slashes production time by over 90%, tran...
+2026-02-15 15:32:50,591 - DEBUG - ✅ Saved (482.5 KB)
+2026-02-15 15:32:50,591 - DEBUG - 🎙️  Generating scene_5_tech_vo.mp3...
+2026-02-15 15:32:50,591 - DEBUG - Text: IgniteAI slashes production time by over 90%, tran...
+2026-02-15 15:32:50,591 - DEBUG - ✅ Saved (494.7 KB)
+2026-02-15 15:32:50,711 - INFO - ✅ Phase 4 complete: Neural Voice Synthesis
+2026-02-15 15:32:50,712 - INFO - ================================================================================
+2026-02-15 15:32:50,712 - INFO - 🎬 PHASE 6: PROFESSIONAL SMART COMPOSITION
+2026-02-15 15:32:50,712 - INFO - ================================================================================
+2026-02-15 15:32:50,712 - INFO - Command: python3 smart_compositor_v2.py --storyline=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scripts/Storyline.md --output=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/Final_Demo_Video.mp4 --recordings-dir=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/INPUT-2026-02-15_15-30-55/raw_recordings --scenes-dir=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes --voiceover-dir=/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/voiceover --captions=true
+2026-02-15 15:34:13,821 - DEBUG - 
+2026-02-15 15:34:13,833 - DEBUG - 🎬 Processing Scene 1: Hook
+2026-02-15 15:34:13,833 - DEBUG - 🎬 Creating image clip: hook_scene.png (35.037551s)
+2026-02-15 15:34:13,833 - DEBUG - 🎵 Overlaying audio: scene_1_vo.mp3 (34.0s) on scene_1_base.mp4 (35.0s)
+2026-02-15 15:34:13,833 - DEBUG - 📝 Generating captions with Gemini Speech-to-Text...
+2026-02-15 15:34:13,833 - DEBUG - Audio: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/voiceover/scene_1_vo.mp3
+2026-02-15 15:34:13,833 - DEBUG - 🎙️  Transcribing audio with Gemini Speech-to-Text...
+2026-02-15 15:34:13,833 - DEBUG - ✅ Transcription complete: 523 characters
+2026-02-15 15:34:13,833 - DEBUG - ✅ Captions generated successfully!
+2026-02-15 15:34:13,833 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_1_vo.srt
+2026-02-15 15:34:13,833 - DEBUG - Total captions: 10
+2026-02-15 15:34:13,833 - DEBUG - 
+2026-02-15 15:34:13,833 - DEBUG - ✅ Styled ASS file created!
+2026-02-15 15:34:13,833 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_1_vo.ass
+2026-02-15 15:34:13,833 - DEBUG - Style: Montserrat Bold, 48px, White with black outline
+2026-02-15 15:34:13,833 - DEBUG - 
+2026-02-15 15:34:13,833 - DEBUG - 📝 Burnt captions from: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_1_vo.ass
+2026-02-15 15:34:13,833 - DEBUG - 
+2026-02-15 15:34:13,833 - DEBUG - 🎬 Processing Scene 2: Landing Page
+2026-02-15 15:34:13,833 - DEBUG - 🎵 Overlaying audio: scene_2_vo.mp3 (28.0s) on scene_2_base.mp4 (11.8s)
+2026-02-15 15:34:13,834 - DEBUG - 📝 Generating captions with Gemini Speech-to-Text...
+2026-02-15 15:34:13,834 - DEBUG - Audio: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/voiceover/scene_2_vo.mp3
+2026-02-15 15:34:13,834 - DEBUG - 🎙️  Transcribing audio with Gemini Speech-to-Text...
+2026-02-15 15:34:13,834 - DEBUG - ✅ Transcription complete: 394 characters
+2026-02-15 15:34:13,834 - DEBUG - ✅ Captions generated successfully!
+2026-02-15 15:34:13,834 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_2_vo.srt
+2026-02-15 15:34:13,834 - DEBUG - Total captions: 7
+2026-02-15 15:34:13,834 - DEBUG - 
+2026-02-15 15:34:13,834 - DEBUG - ✅ Styled ASS file created!
+2026-02-15 15:34:13,834 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_2_vo.ass
+2026-02-15 15:34:13,834 - DEBUG - Style: Montserrat Bold, 48px, White with black outline
+2026-02-15 15:34:13,834 - DEBUG - 
+2026-02-15 15:34:13,834 - DEBUG - 📝 Burnt captions from: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_2_vo.ass
+2026-02-15 15:34:13,834 - DEBUG - 
+2026-02-15 15:34:13,834 - DEBUG - 🎬 Processing Scene 3: Live Demo
+2026-02-15 15:34:13,834 - DEBUG - 🎵 Overlaying audio: scene_3_vo.mp3 (58.6s) on scene_3_base.mp4 (12.8s)
+2026-02-15 15:34:13,834 - DEBUG - 📝 Generating captions with Gemini Speech-to-Text...
+2026-02-15 15:34:13,834 - DEBUG - Audio: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/voiceover/scene_3_vo.mp3
+2026-02-15 15:34:13,834 - DEBUG - 🎙️  Transcribing audio with Gemini Speech-to-Text...
+2026-02-15 15:34:13,834 - DEBUG - ✅ Transcription complete: 788 characters
+2026-02-15 15:34:13,834 - DEBUG - ✅ Captions generated successfully!
+2026-02-15 15:34:13,834 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_3_vo.srt
+2026-02-15 15:34:13,834 - DEBUG - Total captions: 16
+2026-02-15 15:34:13,834 - DEBUG - 
+2026-02-15 15:34:13,835 - DEBUG - ✅ Styled ASS file created!
+2026-02-15 15:34:13,835 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_3_vo.ass
+2026-02-15 15:34:13,835 - DEBUG - Style: Montserrat Bold, 48px, White with black outline
+2026-02-15 15:34:13,835 - DEBUG - 
+2026-02-15 15:34:13,835 - DEBUG - 📝 Burnt captions from: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_3_vo.ass
+2026-02-15 15:34:13,835 - DEBUG - 
+2026-02-15 15:34:13,835 - DEBUG - 🎬 Processing Scene 4: Results
+2026-02-15 15:34:13,835 - DEBUG - ⚠️  Skipping Scene 4 (Assets missing)
+2026-02-15 15:34:13,835 - DEBUG - 
+2026-02-15 15:34:13,835 - DEBUG - 🎬 Processing Scene 5: Tech Wrap-up
+2026-02-15 15:34:13,835 - DEBUG - 🎬 Creating image clip: tech_wrapup_scene.png (33.634286s)
+2026-02-15 15:34:13,835 - DEBUG - 🎵 Overlaying audio: scene_5_tech_vo.mp3 (31.6s) on scene_5_base.mp4 (33.6s)
+2026-02-15 15:34:13,835 - DEBUG - 📝 Generating captions with Gemini Speech-to-Text...
+2026-02-15 15:34:13,835 - DEBUG - Audio: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/voiceover/scene_5_tech_vo.mp3
+2026-02-15 15:34:13,835 - DEBUG - 🎙️  Transcribing audio with Gemini Speech-to-Text...
+2026-02-15 15:34:13,835 - DEBUG - ✅ Transcription complete: 404 characters
+2026-02-15 15:34:13,835 - DEBUG - ✅ Captions generated successfully!
+2026-02-15 15:34:13,835 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_5_tech_vo.srt
+2026-02-15 15:34:13,835 - DEBUG - Total captions: 7
+2026-02-15 15:34:13,835 - DEBUG - 
+2026-02-15 15:34:13,835 - DEBUG - ✅ Styled ASS file created!
+2026-02-15 15:34:13,835 - DEBUG - Saved to: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_5_tech_vo.ass
+2026-02-15 15:34:13,835 - DEBUG - Style: Montserrat Bold, 48px, White with black outline
+2026-02-15 15:34:13,835 - DEBUG - 
+2026-02-15 15:34:13,835 - DEBUG - 📝 Burnt captions from: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_5_tech_vo.ass
+2026-02-15 15:34:13,835 - DEBUG - 🎞️ Concatenating 4 clips into final video...
+2026-02-15 15:34:13,836 - DEBUG - ✅ Final video saved: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/Final_Demo_Video.mp4
+2026-02-15 15:34:13,836 - DEBUG - Size: 3.24 MB
+2026-02-15 15:34:14,189 - INFO - ✅ Phase 6 complete: Professional Smart Composition
+2026-02-15 15:34:14,189 - INFO - ================================================================================
+2026-02-15 15:34:14,189 - INFO - 🎉 PIPELINE EXECUTION SUMMARY
+2026-02-15 15:34:14,189 - INFO - ================================================================================
+2026-02-15 15:34:14,190 - INFO - Total time: 199.1 seconds
+2026-02-15 15:34:14,190 - INFO - Phases completed:
+2026-02-15 15:34:14,190 - INFO -   1. Storyline Generation
+2026-02-15 15:34:14,190 - INFO -   2. AI Scene Generation
+2026-02-15 15:34:14,190 - INFO -   3. Enhanced Voiceover
+2026-02-15 15:34:14,190 - INFO -   4. Video Composition
+2026-02-15 15:34:14,190 - INFO - 📁 Generated Assets:
+2026-02-15 15:34:14,190 - INFO -   - Storyline: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scripts/Storyline.md
+2026-02-15 15:34:14,190 - INFO -   - Recordings: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/INPUT-2026-02-15_15-30-55/raw_recordings/
+2026-02-15 15:34:14,190 - INFO -   - AI Scenes: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/scenes/
+2026-02-15 15:34:14,190 - INFO -   - Voiceovers: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/voiceover/
+2026-02-15 15:34:14,190 - INFO -   - FINAL VIDEO: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/Final_Demo_Video.mp4
+2026-02-15 15:34:14,190 - INFO -   - LOG FILE: /Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/run_IgniteAI.log

@@ -1,0 +1,4 @@
+file '/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_1_final.mp4'
+file '/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_2_final.mp4'
+file '/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_3_final.mp4'
+file '/Users/publicissapient/Projects/AI-Projects/Automated Product Demo Builder/IgniteAI/OUTPUT-2026-02-15_15-30-55/final_video/temp/scene_5_final.mp4'

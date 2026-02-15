@@ -23,7 +23,11 @@ except ImportError:
     sys.exit(1)
 
 # Add parent to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+# Add framework directory to path for imports
+current_dir = Path(__file__).resolve().parent
+framework_dir = current_dir.parent.parent
+sys.path.insert(0, str(framework_dir))
+
 from config_loader import load_config
 from tech_scanner import TechnologyScanner
 

@@ -169,12 +169,12 @@ def parse_scenes_from_markdown(content: str) -> List[DemoScene]:
     return scenes
 
 
-def load_config(specs_path: str = "../INPUT/configuration/Product_Specs.md") -> DemoConfig:
+def load_config(specs_path: str = "../INPUT/configuration/Product_Specs.json") -> DemoConfig:
     """
-    Parse Product_Specs.md into structured configuration
+    Parse Product_Specs (.json or .md) into structured configuration
     
     Args:
-        specs_path: Path to Product_Specs.md file
+        specs_path: Path to Product_Specs file
         
     Returns:
         DemoConfig object with all configuration data
@@ -182,8 +182,27 @@ def load_config(specs_path: str = "../INPUT/configuration/Product_Specs.md") -> 
     path = Path(specs_path)
     
     if not path.exists():
-        raise FileNotFoundError(f"Product specs not found: {specs_path}")
+        # Fallback: check if .md exists if .json was requested, or vice versa
+        if path.suffix == '.json':
+             md_path = path.with_suffix('.md')
+             if md_path.exists():
+                 print(f"⚠️  Config {path} not found, falling back to {md_path}")
+                 path = md_path
+        elif path.suffix == '.md':
+             json_path = path.with_suffix('.json')
+             if json_path.exists():
+                 print(f"⚠️  Config {path} not found, falling back to {json_path}")
+                 path = json_path
+        
+        if not path.exists():
+            raise FileNotFoundError(f"Product specs not found: {specs_path}")
     
+    # Handle JSON
+    if path.suffix.lower() == '.json':
+        with open(path, 'r', encoding='utf-8') as f:
+            return DemoConfig.model_validate_json(f.read())
+
+    # Handle Markdown (Legacy)
     content = path.read_text(encoding='utf-8')
     
     # Extract YAML blocks for structured data
