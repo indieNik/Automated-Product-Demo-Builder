@@ -254,7 +254,7 @@ def main():
         [
             "python3",
             "storyline_generator.py",
-            "storyline_generator.py",
+
             f"--config={input_config_dir}/Product_Specs.json" if args.analyze_url else f"--config={abs_config_path}", # Use new config if analyzed
             f"--output={output_dir}/scripts/Storyline.md"
         ],

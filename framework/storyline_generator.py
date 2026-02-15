@@ -229,7 +229,7 @@ Return as JSON with this structure:
              try:
                  import json
                  manifest = json.loads(manifest_path.read_text())
-                 recording_context = f"\n**Recording Reality (Align script with this):**\n"
+                 recording_context = "\n**Recording Reality (Align script with this):**\n"
                  for scene in manifest['scenes']:
                      status = scene.get('status', 'unknown')
                      recording_context += f"- Scene {scene['scene_number']}: {status.upper()}"
@@ -240,92 +240,76 @@ Return as JSON with this structure:
                  pass
 
         target_duration = self.config.demo.duration_seconds
-        
-        prompt = f"""Create a {target_duration}-second product demo script with this structure:
-        
-        **Context**:
-        {recording_context}
-
-        **PSB Analysis**:
-        - Problem: {psb_data['problem']}
-        - Solution: {psb_data['solution']}
-        - Benefit: {psb_data['benefit']}
-        - Hook: {psb_data['hook_suggestion']}
-
-        **Product**: {self.product_name}
-        **Target Duration**: {target_duration}s
-        **Tone**: {self.config.voiceover.tone}
-
-        **UI Flow Available**:
-        {yaml.dump(ui_flow, default_flow_style=False)}
-
-        # Adaptive Logic based on navigability
         navigability = getattr(self.config.demo, 'navigability_status', 'full')
         
         if navigability == 'limited':
-            structure_prompt = """
-            **Constraint**: The product has LIMITED public navigability (likely just a landing page).
-            Create a concise **1 to 3 scene** demo.
-            - Scene 1: Hook + Problem (Focus on the pain point)
-            - Scene 2: Solution Value Prop (Show the landing page and explain how it solves the problem)
-            - Scene 3 (Optional): Impact/CTA (Summary and call to action)
-            
-            **CRITICAL**: Do NOT attempt to simulate complex dashboard interactions or features that are likely behind a login. Focus on the available public content.
-            """
+            structure_prompt = (
+                "**Constraint**: The product has LIMITED public navigability (likely just a landing page).\n"
+                "Create a concise **1 to 3 scene** demo.\n"
+                "- Scene 1: Hook + Problem (Focus on the pain point)\n"
+                "- Scene 2: Solution Value Prop (Show the landing page and explain how it solves the problem)\n"
+                "- Scene 3 (Optional): Impact/CTA (Summary and call to action)\n"
+                "\n"
+                "**CRITICAL**: Do NOT attempt to simulate complex dashboard interactions or features that are likely behind a login. Focus on the available public content."
+            )
         else:
-            structure_prompt = """
-            Create 5 scenes following this timing:
-            1. Hook + Problem (30s) - Grab attention, establish pain
-            2. Solution Introduction (20s) - Show landing page, introduce product
-            3. Feature Demo (60s) - Live product interaction showing key workflow
-            4. Results Showcase (20s) - Show output/benefit
-            5. Impact + CTA (20s) - Metrics and call-to-action
-            """
+            structure_prompt = (
+                "Create 5 scenes following this timing:\n"
+                "1. Hook + Problem (30s) - Grab attention, establish pain\n"
+                "2. Solution Introduction (20s) - Show landing page, introduce product\n"
+                "3. Feature Demo (60s) - Live product interaction showing key workflow\n"
+                "4. Results Showcase (20s) - Show output/benefit\n"
+                "5. Impact + CTA (20s) - Metrics and call-to-action"
+            )
 
-        prompt = f"""Create a product demo script with this structure:
-        
-        **Context**:
-        {recording_context}
-
-        **PSB Analysis**:
-        - Problem: {psb_data['problem']}
-        - Solution: {psb_data['solution']}
-        - Benefit: {psb_data['benefit']}
-        - Hook: {psb_data['hook_suggestion']}
-
-        **Product**: {self.product_name}
-        **Target Duration**: {target_duration}s
-        **Tone**: {self.config.voiceover.tone}
-        **Navigability**: {navigability}
-
-        **UI Flow Available**:
-        {yaml.dump(ui_flow, default_flow_style=False)}
-
-        {structure_prompt}
-
-        For EACH scene, provide:
-        - Scene title
-        - Duration in seconds
-        - **Voiceover script**: 
-            - MUST be natural and conversational ({self.config.voiceover.pacing_wpm} WPM).
-            - **CRITICAL**: Use emotion tags at the start of sentences, e.g., `[excited]`, `[concerned]`, `[proud]`, `[happy]`, `[calm]`.
-            - Narrate what is happening on screen (Video).
-        - 3-5 caption keywords (short phrases for on-screen text)
-        - Visual description (what's shown on screen)
-
-        Return as JSON array:
-        [
-            {{
-                "scene_number": 1,
-                "title": "Hook + Problem",
-                "duration_seconds": 30,
-                "voiceover_script": "[concerned] Are you tired of... [excited] We have a solution!",
-                "captions": ["keyword1", "keyword2"],
-                "visual_notes": "What viewer sees on screen"
-            }},
-            ...
+        # Construct prompt safely to avoid syntax errors with triple quotes
+        prompt_parts = [
+            f"Create a {target_duration}-second product demo script with this structure:",
+            "",
+            "**Context**:",
+            recording_context,
+            "",
+            "**PSB Analysis**:",
+            f"- Problem: {psb_data['problem']}",
+            f"- Solution: {psb_data['solution']}",
+            f"- Benefit: {psb_data['benefit']}",
+            f"- Hook: {psb_data['hook_suggestion']}",
+            "",
+            f"**Product**: {self.product_name}",
+            f"**Target Duration**: {target_duration}s",
+            f"**Tone**: {self.config.voiceover.tone}",
+            f"**Navigability**: {navigability}",
+            "",
+            "**UI Flow Available**:",
+            yaml.dump(ui_flow, default_flow_style=False),
+            "",
+            structure_prompt,
+            "",
+            "For EACH scene, provide:",
+            "- Scene title",
+            "- Duration in seconds",
+            "- **Voiceover script**: ",
+            f"    - MUST be natural and conversational ({self.config.voiceover.pacing_wpm} WPM).",
+            "    - **CRITICAL**: Use emotion tags at the start of sentences, e.g., `[excited]`, `[concerned]`, `[proud]`, `[happy]`, `[calm]`.",
+            "    - Narrate what is happening on screen (Video).",
+            "- 3-5 caption keywords (short phrases for on-screen text)",
+            "- Visual description (what's shown on screen)",
+            "",
+            "Return as JSON array:",
+            "[",
+            "    {",
+            '        "scene_number": 1,',
+            '        "title": "Hook + Problem",',
+            '        "duration_seconds": 30,',
+            '        "voiceover_script": "[concerned] Are you tired of... [excited] We have a solution!",',
+            '        "captions": ["keyword1", "keyword2"],',
+            '        "visual_notes": "What viewer sees on screen"',
+            "    },",
+            "    ...",
+            "]"
         ]
-        """
+        
+        prompt = "\n".join(prompt_parts)
         
         try:
             response = self.gemini_client.models.generate_content(
@@ -451,7 +435,7 @@ Return as JSON with this structure:
             product_name=self.product_name,
             total_duration=self.config.demo.duration_seconds,
             hook_type=psb_data.get('hook_suggestion', 'Problem-focused'),
-            hook_type=psb_data.get('hook_suggestion', 'Problem-focused'),
+
             structure=f"Problem ({scenes[0].duration_seconds}s) → Solution ({scenes[1].duration_seconds}s) ..." if len(scenes) > 1 else "Single Scene",
             scenes=scenes
         )
